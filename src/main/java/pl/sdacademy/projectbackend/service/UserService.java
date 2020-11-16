@@ -1,7 +1,11 @@
 package pl.sdacademy.projectbackend.service;
 
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.exceptions.UserNotFound;
+import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -12,6 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User findUserById(Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()){
+            throw new UserNotFound("User with id: " + id + " doesn't exists");
+        }
+
+        return optionalUser.get();
+    }
 
 
 }
