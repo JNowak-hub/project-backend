@@ -26,5 +26,9 @@ public class UserService {
         return optionalUser.get();
     }
 
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
 
 }

@@ -1,11 +1,9 @@
 package pl.sdacademy.projectbackend.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.projectbackend.model.User;
+import pl.sdacademy.projectbackend.repository.UserRepository;
 import pl.sdacademy.projectbackend.service.UserService;
 
 @RestController
@@ -22,4 +20,10 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         return ResponseEntity.ok(userService.findUserById(id));
     }
+
+    @DeleteMapping("{id}")
+    public void deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
+    }
+
 }
