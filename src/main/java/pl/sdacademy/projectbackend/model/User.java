@@ -1,6 +1,7 @@
 package pl.sdacademy.projectbackend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,15 +11,32 @@ public class User {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Min(value = 3, message = "Name can not be shorter than 3 characters")
+    @Max(value = 13, message = "Name can not be longer than 13 characters")
     private String firstName;
+
+    @NotBlank(message = "Last name can not be blank")
+    @NotEmpty(message = "Last name can not be empty")
     private String lastName;
+
+    @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
+
     @Column(nullable = false)
+    @Min(value = 3, message = "Login can not be shorter than 3 characters")
     private String login;
+
     @Column(nullable = false)
+    @NotNull(message = "Password can not be null")
+    @NotEmpty(message = "Password can not be empty")
+    @NotBlank(message = "Password can not be blank")
     private String password;
+
     @Column(nullable = false)
+    @Email(message = "Email must be valid")
     private String email;
+
     @ManyToMany
     List<Event> events;
 
