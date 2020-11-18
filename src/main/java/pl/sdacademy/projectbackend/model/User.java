@@ -34,6 +34,14 @@ public class User {
         this.email = email;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
     public String getFirstName() {
         return firstName;
     }
