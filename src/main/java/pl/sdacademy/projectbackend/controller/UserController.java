@@ -26,4 +26,10 @@ public class UserController {
         userService.deleteUserById(id);
     }
 
+    @PostMapping
+    public User addUser(@RequestBody User user) {
+        return userService.addUser(user);
+    }
+
+
 }
