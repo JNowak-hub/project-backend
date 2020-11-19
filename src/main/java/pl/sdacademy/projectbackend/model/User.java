@@ -1,12 +1,17 @@
 package pl.sdacademy.projectbackend.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -37,19 +42,58 @@ public class User {
     @Email(message = "Email must be valid")
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
+
     @ManyToMany
     List<Event> events;
 
     public User() {
     }
 
-    public User(String firstName, String lastName, LocalDate birthDate, String login, String password, String email) {
+    public User(String firstName, String lastName, LocalDate birthDate, String login, String password, String email, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.login = login;
         this.password = password;
         this.email = email;
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(role);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public Long getId() {
@@ -76,8 +120,12 @@ public class User {
         return login;
     }
 
-    public String getPassword() {
-        return password;
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {

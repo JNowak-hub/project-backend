@@ -8,6 +8,7 @@ import org.mockito.Incubating;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
@@ -39,7 +40,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("When repository return not null Optional of User then User should be returned")
+    @DisplayName("When findUserById gets not null Optional of User then User should be returned")
     void test1() {
         //given
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(testUser));
@@ -51,7 +52,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("When repository return null Optional of User then UsetNotFound exception is thrown")
+    @DisplayName("When findUserById gets null Optional of User then UsetNotFound exception is thrown")
     void test2() {
         //given
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -59,5 +60,27 @@ public class UserServiceTest {
         UserNotFound exception = assertThrows(UserNotFound.class, () -> userService.findUserById(1L));
         //then
         assertThat(exception.getMessage()).isEqualTo("User with id: " + 1 + " doesn't exists");
+    }
+
+    @Test
+    @DisplayName("When findUserByUserName gets not null Optional of User then returns user")
+    void test3() {
+        //given
+        when(userRepository.findUserByLogin(testUser.getLogin())).thenReturn(Optional.of(testUser));
+        //when
+        UserDetails returnedUser = userService.loadUserByUsername("test");
+        //then
+        assertThat(returnedUser.getUsername()).isEqualTo(testUser.getLogin());
+    }
+
+    @Test
+    @DisplayName("When findUserByUserName gets null Optional of User then throws UserNotFound")
+    void test4() {
+        //given
+        when(userRepository.findUserByLogin(anyString())).thenReturn(Optional.empty());
+        //when
+        UserNotFound exception = assertThrows(UserNotFound.class, () -> userService.loadUserByUsername("wrong login"));
+        //then
+        assertThat(exception.getMessage()).isEqualTo("User with login: " + "wrong login" + " doesn't exists");
     }
 }
