@@ -1,5 +1,8 @@
 package pl.sdacademy.projectbackend.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
@@ -8,7 +11,7 @@ import pl.sdacademy.projectbackend.repository.UserRepository;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
 
@@ -16,10 +19,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User findUserById(Long id){
+    public User findUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
-        if(optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new UserNotFound("User with id: " + id + " doesn't exists");
         }
 
@@ -35,4 +38,12 @@ public class UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findUserByLogin(login);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFound("User with login: " + login + " doesn't exists");
+        }
+        return optionalUser.get();
+    }
 }
