@@ -30,7 +30,8 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+        User user = findUserById(id);
+        userRepository.delete(user);
     }
 
     public User addUser(User user) {
