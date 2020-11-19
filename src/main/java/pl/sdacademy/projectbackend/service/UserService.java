@@ -3,8 +3,10 @@ package pl.sdacademy.projectbackend.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
+import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
 
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User findUserById(Long id) {
