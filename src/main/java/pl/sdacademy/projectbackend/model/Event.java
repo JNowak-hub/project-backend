@@ -29,8 +29,7 @@ public class Event {
 
     @Column(nullable = false)
     private LocalDateTime endDate;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<User> participants;
 
     @ManyToOne
