@@ -71,5 +71,6 @@ public class UserServiceTest {
         userService.deleteUserById(1L);
         //then
         verify(userRepository, Mockito.times(1)).delete(testUser);
+
     }
 }
