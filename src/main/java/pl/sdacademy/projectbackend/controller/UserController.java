@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.projectbackend.model.User;
-import pl.sdacademy.projectbackend.repository.UserRepository;
 import pl.sdacademy.projectbackend.service.UserService;
 
 @RestController
 @RequestMapping("api/user")
+@CrossOrigin("*")
 public class UserController {
 
     private UserService userService;

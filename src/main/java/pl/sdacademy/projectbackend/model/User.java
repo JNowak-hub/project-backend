@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -46,7 +47,7 @@ public class User implements UserDetails {
     @NotNull
     private Role role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     List<Event> events;
 
     public User() {
@@ -67,6 +68,8 @@ public class User implements UserDetails {
         return Collections.singleton(role);
     }
 
+    @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

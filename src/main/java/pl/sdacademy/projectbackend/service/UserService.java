@@ -19,8 +19,9 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
     public User findUserById(Long id) {
