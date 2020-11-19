@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 
 @ControllerAdvice
@@ -21,7 +22,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFound.class)
-    public final ResponseEntity<Object> handleUserAlreadyExistsException(UserNotFound ex) {
+    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFound ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EventNotFound.class)
+    public final ResponseEntity<Object> handleEventNotFoundException(EventNotFound ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
