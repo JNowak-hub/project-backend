@@ -1,10 +1,9 @@
 package pl.sdacademy.projectbackend.model;
 
+import org.aspectj.lang.annotation.After;
+
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class Event {
     private String description;
 
     @Column(nullable = false)
-
+    @FutureOrPresent
     private LocalDateTime startDate;
 
     @Column(nullable = false)

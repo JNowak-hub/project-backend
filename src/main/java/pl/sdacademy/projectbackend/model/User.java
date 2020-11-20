@@ -41,10 +41,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @Email(message = "Email must be valid")
+    @NotNull
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Role role;
 
     @ManyToMany(fetch = FetchType.LAZY)
