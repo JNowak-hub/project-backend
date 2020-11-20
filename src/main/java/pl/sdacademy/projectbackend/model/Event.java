@@ -1,7 +1,5 @@
 package pl.sdacademy.projectbackend.model;
 
-import org.aspectj.lang.annotation.After;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
