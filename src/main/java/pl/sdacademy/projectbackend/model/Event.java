@@ -15,6 +15,7 @@ public class Event {
     @Column(nullable = false)
     @NotBlank(message = "Event name can not be blank")
     @NotEmpty(message = "Event name can not be empty")
+    @NotNull
     private String name;
 
     @Min(value = 20, message = "Description can not be shorter than 20 characters")
@@ -22,9 +23,12 @@ public class Event {
 
     @Column(nullable = false)
     @FutureOrPresent
+    @NotNull
     private LocalDateTime startDate;
 
     @Column(nullable = false)
+    @NotNull
+    @Future
     private LocalDateTime endDate;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> participants;
