@@ -14,9 +14,11 @@ import pl.sdacademy.projectbackend.service.UserService;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserService userService;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public WebSecurityConfiguration(UserService userService) {
+    public WebSecurityConfiguration(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -38,15 +40,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(userService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder);
     }
 }
