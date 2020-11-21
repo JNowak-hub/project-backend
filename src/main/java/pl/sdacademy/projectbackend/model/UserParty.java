@@ -13,7 +13,7 @@ public class UserParty {
     private Long userId;
 
     @OneToMany
-    private Long partyId;
+    private Long eventId;
 
     @NotNull
     private Boolean isConfirmedByAdministrator;
@@ -24,10 +24,10 @@ public class UserParty {
     public UserParty() {
     }
 
-    public UserParty(Long id, Long userId, Long partyId, Boolean isConfirmedByAdministrator, Boolean isConfirmedByUser) {
+    public UserParty(Long id, Long userId, Long eventId, Boolean isConfirmedByAdministrator, Boolean isConfirmedByUser) {
         this.id = id;
         this.userId = userId;
-        this.partyId = partyId;
+        this.eventId = eventId;
         this.isConfirmedByAdministrator = isConfirmedByAdministrator;
         this.isConfirmedByUser = isConfirmedByUser;
     }
@@ -48,12 +48,12 @@ public class UserParty {
         this.userId = userId;
     }
 
-    public Long getPartyId() {
-        return partyId;
+    public Long getEventId() {
+        return eventId;
     }
 
-    public void setPartyId(Long partyId) {
-        this.partyId = partyId;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public Boolean getConfirmedByAdministrator() {
