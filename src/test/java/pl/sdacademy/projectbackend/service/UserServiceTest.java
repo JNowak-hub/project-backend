@@ -105,10 +105,27 @@ public class UserServiceTest {
         UserNotFound userNotFound = assertThrows(UserNotFound.class, () -> userService.deleteUserById(1l));
         //then
         assertThat(userNotFound.getMessage()).isEqualTo("User with id: " + 1 + " doesn't exists");
-
+    }
+    @Test
+    @DisplayName("Should add user to userRepository")
+    void test7() {
+        //given
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        //when
+        User newUser = userRepository.save(new User());
+        //then
+        assertThat(newUser.getLogin()).isEqualTo("test");
     }
 
-
-
+    @Test
+    @DisplayName("Should not add user to userRepository")
+    void test8() {
+        //given
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        //when
+        User newUser = userRepository.save(new User());
+        //then
+        assertThat(newUser.getLogin()).isNotEqualTo(testUser.getLogin() + 1);
+    }
 
 }

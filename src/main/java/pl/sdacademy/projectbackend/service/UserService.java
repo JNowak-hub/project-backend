@@ -40,8 +40,7 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
-    @Valid
-    public User addUser(User user) {
+    public User addUser(@Valid User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);
