@@ -8,7 +8,6 @@ import pl.sdacademy.projectbackend.service.UserService;
 
 @RestController
 @RequestMapping("api/user")
-@CrossOrigin("*")
 public class UserController {
 
     private UserService userService;
