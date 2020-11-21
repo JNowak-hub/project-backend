@@ -34,14 +34,13 @@ public class User implements UserDetails {
     private String login;
 
     @Column(nullable = false)
-    @NotNull(message = "Password can not be null")
     @NotEmpty(message = "Password can not be empty")
     @NotBlank(message = "Password can not be blank")
     private String password;
 
     @Column(nullable = false)
     @Email(message = "Email must be valid")
-    @NotNull
+    @NotEmpty
     private String email;
 
     @Enumerated(EnumType.STRING)
