@@ -1,10 +1,7 @@
 package pl.sdacademy.projectbackend.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,16 +15,20 @@ public class Event {
     @Column(nullable = false)
     @NotBlank(message = "Event name can not be blank")
     @NotEmpty(message = "Event name can not be empty")
+    @NotNull
     private String name;
 
     @Min(value = 20, message = "Description can not be shorter than 20 characters")
     private String description;
 
     @Column(nullable = false)
-
+    @FutureOrPresent
+    @NotNull
     private LocalDateTime startDate;
 
     @Column(nullable = false)
+    @NotNull
+    @Future
     private LocalDateTime endDate;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> participants;

@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,17 +11,18 @@ import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.encoder = encoder;
     }
 
     public User findUserById(Long id) {
@@ -38,7 +40,10 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
+    @Valid
     public User addUser(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 

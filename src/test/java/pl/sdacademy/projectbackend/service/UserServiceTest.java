@@ -85,6 +85,7 @@ public class UserServiceTest {
         assertThat(exception.getMessage()).isEqualTo("User with login: " + "wrong login" + " doesn't exists");
     }
 
+    @Test
     @DisplayName("When repository return not null Optional of User then User should be deleted")
     void test5() {
         //given
@@ -93,8 +94,20 @@ public class UserServiceTest {
         userService.deleteUserById(1L);
         //then
         verify(userRepository, Mockito.times(1)).delete(testUser);
+    }
+
+    @Test
+    @DisplayName("When repository gets null Optional of User then User then throws UserNotFound")
+    void test6() {
+        //given
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        //when
+        UserNotFound userNotFound = assertThrows(UserNotFound.class, () -> userService.deleteUserById(1l));
+        //then
+        assertThat(userNotFound.getMessage()).isEqualTo("User with id: " + 1 + " doesn't exists");
 
     }
+
 
 
 
