@@ -31,6 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class UserControllerTest {
 
+    public static final String TEST_USER_PASSWORD = "password";
+    public static final String TEST_USER_LOGIN = "login";
+    public static final String TEST_USER_EMAIL = "login@login.com";
     private MockMvc mockMvc;
 
     @Mock
@@ -48,9 +51,9 @@ public class UserControllerTest {
                 .setControllerAdvice(new CustomExceptionHandler())
                 .build();
         testUser = new User();
-        testUser.setPassword("password");
-        testUser.setLogin("login");
-        testUser.setEmail("login@login.com");
+        testUser.setPassword(TEST_USER_PASSWORD);
+        testUser.setLogin(TEST_USER_LOGIN);
+        testUser.setEmail(TEST_USER_EMAIL);
     }
 
     @Test
@@ -92,17 +95,23 @@ public class UserControllerTest {
     public void test5() throws Exception {
         //given
         when(userService.addUser(any(User.class))).thenReturn(testUser);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String testUserJson = objectMapper.writeValueAsString(testUser);
-        //when
+        //language=JSON
+        String testUserJson = "{\n" +
+                "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
+                "  \"login\": \"" + TEST_USER_PASSWORD + "\",\n" +
+                "  \"email\": \""  + TEST_USER_PASSWORD +  "\"\n" +
+                "}";
+
+        // when
         ResultActions resultActions = mockMvc
                 .perform(post("/api/user/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(testUserJson));
-        System.out.println("RESPONSE");
-        System.out.println(resultActions.andReturn().getResponse().getContentAsString());
+                        .content(testUserJson)
+                        .contentType(MediaType.APPLICATION_JSON));
+        // then
         resultActions
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", is(testUser.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login", is(testUser.getLogin())));
 
     }
 
