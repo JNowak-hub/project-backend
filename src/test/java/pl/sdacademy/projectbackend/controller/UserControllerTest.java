@@ -79,20 +79,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("When call deleteById should return status 410")
-    public void test3() throws Exception {
-        //given
-        when(userService.findUserById(1l)).thenReturn(testUser);
-        //when
-//        mockMvc
-//                .perform()
-        //then
-
-    }
-
-    @Test
     @DisplayName("When call addUser should return status 201")
-    public void test5() throws Exception {
+    public void test3() throws Exception {
         //given
         when(userService.addUser(any(User.class))).thenReturn(testUser);
         //language=JSON
@@ -117,7 +105,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("When call addUser should return status 404")
-    public void test6() throws Exception {
+    public void test4() throws Exception {
         //given
         when(userService.addUser(any(User.class))).thenThrow(UserNotFound.class);
         // when then
