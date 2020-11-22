@@ -3,37 +3,40 @@ package pl.sdacademy.projectbackend.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
+import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Comment;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
-import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @WebAppConfiguration
 public class EventControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     @InjectMocks
-    private EventService eventService;
+    private EventController eventController;
 
     private Event testEvent;
     private User testUser;
@@ -43,7 +46,7 @@ public class EventControllerTest {
     @BeforeEach
     void mockSetup() {
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(eventService)
+                .standaloneSetup(eventController)
                 .setControllerAdvice(new CustomExceptionHandler())
                 .build();
 
@@ -62,8 +65,8 @@ public class EventControllerTest {
         testEvent.setId(1L);
         testEvent.setName("Sample Event Name");
         testEvent.setDescription("Description about event, some random text from description");
-        testEvent.setStartDate(LocalDateTime.of(2020,10,20,20,00));
-        testEvent.setEndDate(LocalDateTime.of(2020,10,21,20,00));
+        testEvent.setStartDate(LocalDateTime.of(2020, 10, 20, 20, 00));
+        testEvent.setEndDate(LocalDateTime.of(2020, 10, 21, 20, 00));
 
         userEvent = new UserEvent(testUser, testEvent);
 
@@ -76,15 +79,25 @@ public class EventControllerTest {
     }
 
     @Test
-    @DisplayName("When findById gets not null Optional of Event then Event should be returned")
-    void test1() {
+    @DisplayName("When findEventById gets not null Optional of Event then Event should be returned")
+    void getEventById() throws Exception {
         //given
-        when(eventRepository.findById(1L)).thenReturn(Optional.ofNullable(testEvent));
-        //when
-        Event event = eventService.findEventById(1L);
-        //then
-        assertThat(event).isEqualTo(testEvent);
-
+        when(eventService.findEventById(1L)).thenReturn(testEvent);
+        //when then
+        mockMvc.perform(get("/api/event/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", is(testEvent.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", is(testEvent.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location", is(testEvent.getLocation())));
     }
 
+    @Test
+    @DisplayName("When call findEventById should return status 404")
+    public void deleteEventById() throws Exception {
+        //given
+        when(eventService.findEventById(1L)).thenThrow(EventNotFound.class);
+        //when then
+        mockMvc.perform(get("/api/event/1"))
+                .andExpect(status().isNotFound());
+    }
 }
