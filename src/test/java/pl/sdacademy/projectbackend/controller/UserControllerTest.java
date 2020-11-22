@@ -20,8 +20,7 @@ import pl.sdacademy.projectbackend.service.UserService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +83,7 @@ public class UserControllerTest {
         String testUserJson = "{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
                 "  \"login\": \"" + TEST_USER_PASSWORD + "\",\n" +
-                "  \"email\": \""  + TEST_USER_PASSWORD +  "\"\n" +
+                "  \"email\": \"" + TEST_USER_PASSWORD + "\"\n" +
                 "}";
 
         // when
@@ -116,6 +115,24 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
         //then
         resultActions
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("When call deleteUserById should return status 200")
+    public void test5() throws Exception {
+        //given when then
+        mockMvc
+                .perform(delete("/api/user/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("When call deleteUserById should return status 404")
+    public void test6() throws Exception {
+        //given when then
+        mockMvc
+                .perform(delete("/api/user/"))
                 .andExpect(status().isNotFound());
     }
 
