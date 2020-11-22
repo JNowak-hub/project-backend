@@ -6,11 +6,8 @@ import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -39,8 +36,8 @@ public class EventService {
         eventRepository.delete(findEventById(id));
     }
 
-    public List<Event> findEventByName(String name) {
-        return eventRepository.findEventByName(name);
+    public List<Event> findEventByNameContaining(String name) {
+        return eventRepository.findEventByNameContaining(name);
     }
 
     public List<Event> findEventByOrganizer(User user) {
