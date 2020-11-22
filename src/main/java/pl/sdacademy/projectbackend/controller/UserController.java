@@ -26,10 +26,9 @@ public class UserController {
         userService.deleteUserById(id);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
-
 
 }

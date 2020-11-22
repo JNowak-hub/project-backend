@@ -21,7 +21,7 @@ public class EventController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public void deleteEventById(@PathVariable Long id) {
         eventService.deleteEventById(id);
     }
 }
