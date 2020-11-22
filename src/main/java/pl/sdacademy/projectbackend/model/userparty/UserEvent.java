@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class UserEven {
+public class UserEvent {
 
 
     @EmbeddedId
@@ -27,10 +27,10 @@ public class UserEven {
     @NotNull
     private Boolean isConfirmedByUser;
 
-    public UserEven() {
+    public UserEvent() {
     }
 
-    public UserEven(UserEventId id, User user, Event event) {
+    public UserEvent(UserEventId id, User user, Event event) {
         this.id = new UserEventId(user.getId(),event.getId());
         this.user = user;
         this.event = event;

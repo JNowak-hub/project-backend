@@ -1,5 +1,7 @@
 package pl.sdacademy.projectbackend.model;
 
+import pl.sdacademy.projectbackend.model.userparty.UserEvent;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -30,8 +32,13 @@ public class Event {
     @NotNull
     @Future
     private LocalDateTime endDate;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<User> participants;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "event",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<UserEvent> participants;
 
     @ManyToOne
     @NotNull
@@ -46,10 +53,10 @@ public class Event {
     @NotNull
     private Boolean privateEvent;
 
-    public Event(){
+    public Event() {
     }
 
-    public Event(Long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate, List<User> participants, User organizer, List<Comment> comments, String location, Boolean privateEvent) {
+    public Event(Long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate, List<UserEvent> participants, User organizer, List<Comment> comments, String location, Boolean privateEvent) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -102,11 +109,11 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public List<User> getParticipants() {
+    public List<UserEvent> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(List<UserEvent> participants) {
         this.participants = participants;
     }
 

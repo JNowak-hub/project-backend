@@ -3,6 +3,7 @@ package pl.sdacademy.projectbackend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -46,8 +47,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    List<Event> events;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    List<UserEvent> events;
 
     public User() {
     }
@@ -102,8 +108,12 @@ public class User implements UserDetails {
         return id;
     }
 
-    public List<Event> getEvents() {
+    public List<UserEvent> getEvents() {
         return events;
+    }
+
+    public void setEvents(List<UserEvent> events) {
+        this.events = events;
     }
 
     public String getFirstName() {
@@ -162,7 +172,4 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
 }
