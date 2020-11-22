@@ -36,7 +36,29 @@ public class UserEvent {
         this.event = event;
     }
 
+    public UserEventId getId() {
+        return id;
+    }
 
+    public void setId(UserEventId id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
     public Boolean getConfirmedByAdministrator() {
         return isConfirmedByAdministrator;

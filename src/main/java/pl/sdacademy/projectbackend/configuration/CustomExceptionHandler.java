@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
+import pl.sdacademy.projectbackend.exceptions.UserAlreadyAssigned;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 
 @ControllerAdvice
@@ -29,5 +30,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EventNotFound.class)
     public final ResponseEntity<Object> handleEventNotFoundException(EventNotFound ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyAssigned.class)
+    public final ResponseEntity<Object> handleEventUserAlreadyAssignedException(UserAlreadyAssigned ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
