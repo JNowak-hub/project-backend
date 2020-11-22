@@ -1,6 +1,6 @@
 FROM maven:3.6.3-jdk-11
 ARG username
-ARG password
+ARG dbpassword
 ARG url
 ENV username=$username
 ENV dbpassword=$dbpassword
