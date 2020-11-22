@@ -134,10 +134,22 @@ public class UserServiceTest {
     @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
     void test9() {
         //given
-
+        when(userRepository.findUserByEmail("test")).thenReturn(Optional.ofNullable(testUser));
         //when
-
+        User userByEmail = userService.findUserByEmail("test");
         //then
+        assertThat(userByEmail).isEqualTo(testUser);
+    }
+
+    @Test
+    @DisplayName("When findUserByEmail gets null Optional of User then UsetNotFound exception is thrown")
+    void test10() {
+        //given
+        when(userRepository.findUserByEmail("test")).thenReturn(Optional.empty());
+        //when
+        UserNotFound userNotFound = assertThrows(UserNotFound.class, () -> userService.findUserByEmail("test"));
+        //then
+        assertThat(userNotFound.getMessage()).isEqualTo("User with email: " + "test" + " doesn't exists");
     }
 
 }
