@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "event_table")
+@Table(name = "party")
 public class Event {
 
     @Id
