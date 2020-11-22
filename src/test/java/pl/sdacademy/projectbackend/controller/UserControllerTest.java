@@ -119,21 +119,15 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("When call deleteUserById should return status 200")
+    @DisplayName("When call deleteUserById should return status 200 and verify deleteUserById Method")
     public void test5() throws Exception {
-        //given when then
+        //given when
+
         mockMvc
                 .perform(delete("/api/user/1"))
                 .andExpect(status().isOk());
-    }
 
-    @Test
-    @DisplayName("When call deleteUserById should return status 404")
-    public void test6() throws Exception {
-        //given when then
-        mockMvc
-                .perform(delete("/api/user/"))
-                .andExpect(status().isNotFound());
+        //then
+        verify(userService).deleteUserById(1L);
     }
-
 }

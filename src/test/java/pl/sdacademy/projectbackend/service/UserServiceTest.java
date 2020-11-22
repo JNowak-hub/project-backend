@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    public static final String TEST_USER_PASSWORD = "password";
+    public static final String TEST_USER_LOGIN = "test";
+    public static final String TEST_USER_EMAIL = "test@test.com";
+
     @Mock
     private UserRepository userRepository;
 
@@ -34,7 +38,7 @@ public class UserServiceTest {
     void setUp() {
         testUser = new User();
         testUser.setId(1L);
-        testUser.setLogin("test");
+        testUser.setLogin(TEST_USER_PASSWORD);
         testUser.setEmail("test@test.com");
         testUser.setPassword("password");
     }
@@ -124,6 +128,16 @@ public class UserServiceTest {
         User newUser = userRepository.save(new User());
         //then
         assertThat(newUser.getLogin()).isNotEqualTo(testUser.getLogin() + 1);
+    }
+
+    @Test
+    @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
+    void test9() {
+        //given
+
+        //when
+
+        //then
     }
 
 }
