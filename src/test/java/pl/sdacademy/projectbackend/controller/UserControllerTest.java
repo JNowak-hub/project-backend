@@ -52,7 +52,6 @@ public class UserControllerTest {
     public void test1() throws Exception {
         //given
         when(userService.findUserById(1L)).thenReturn(testUser);
-        ObjectMapper objectMapper = new ObjectMapper();
         //when then
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isOk())
@@ -65,7 +64,6 @@ public class UserControllerTest {
     public void test2() throws Exception {
         //given
         when(userService.findUserById(1L)).thenThrow(UserNotFound.class);
-        ObjectMapper objectMapper = new ObjectMapper();
         //when then
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isNotFound());
