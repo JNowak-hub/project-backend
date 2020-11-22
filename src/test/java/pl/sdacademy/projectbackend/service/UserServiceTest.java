@@ -1,16 +1,13 @@
 package pl.sdacademy.projectbackend.service;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Incubating;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
@@ -51,7 +48,6 @@ public class UserServiceTest {
         User returnedUser = userService.findUserById(1L);
         //then
         assertThat(returnedUser).isEqualTo(testUser);
-
     }
 
     @Test
