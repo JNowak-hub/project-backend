@@ -1,6 +1,7 @@
 package pl.sdacademy.projectbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
+@Table(name = "user_table")
 public class User implements UserDetails {
 
     @Id
@@ -164,6 +166,7 @@ public class User implements UserDetails {
         this.login = login;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
