@@ -100,7 +100,6 @@ public class UserEventServiceTest {
         //then
         assertThat("User : " + testUser.getLogin() + " is already assigned to event: " + testEvent.getName()).isEqualTo(exception.getMessage());
         verify(repository, never()).save(any());
-        //
     }
 
 }
