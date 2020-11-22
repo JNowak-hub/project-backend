@@ -7,6 +7,7 @@ import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,8 +45,37 @@ public class EventService {
                         .findAll()
                         .stream()
                         .filter(a -> a.getName().contains(name))
-                        .collect(Collectors.toUnmodifiableList());
-
-
+                        .collect(Collectors.toList());
     }
+
+    public List<Event> findEventByOrganizer(User user) {
+        return eventRepository
+                .findAll()
+                .stream()
+                .filter(a -> a.getOrganizer().equals(user))
+                .collect(Collectors.toList());
+    }
+
+    public List<Event> findEventByKeywordDescription(String keyword) {
+        return eventRepository
+                .findAll()
+                .stream()
+                .filter(a -> a.getDescription().contains(keyword))
+                .collect(Collectors.toList());
+    }
+
+    public List<Event> findEventByPartialLocation(String partialLocation) {
+        return eventRepository
+                .findAll()
+                .stream()
+                .filter(a -> a.getLocation().contains(partialLocation))
+                .collect(Collectors.toList());
+    }
+
+    /*public List<Event> findEventByDate(LocalDateTime date) {
+        return eventRepository
+                .findAll()
+                .stream()
+                .filter(a -> a.getStartDate().isBefore(date) && a.getEndDate().isAfter(date).
+    }*/
 }
