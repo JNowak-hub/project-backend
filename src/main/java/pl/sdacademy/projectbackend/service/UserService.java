@@ -12,7 +12,9 @@ import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -44,6 +46,19 @@ public class UserService implements UserDetailsService {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);
+    }
+
+    public User findUserByEmail(String email) {
+        Optional<User> userByEmail = userRepository.findUserByEmail(email);
+        if (userByEmail.isEmpty()){
+            throw new UserNotFound("User with email: " + email + " doesn't exists");
+        }
+        return userByEmail.get();
+    }
+
+    public List<User> findUserByFirstNameAndLastName(String firstName, String lastName) {
+        List<User> userByFirstNameAndLastName = userRepository.findUserByFirstNameAndLastName(firstName, lastName);
+        return userByFirstNameAndLastName.stream().collect(Collectors.toList());
     }
 
 

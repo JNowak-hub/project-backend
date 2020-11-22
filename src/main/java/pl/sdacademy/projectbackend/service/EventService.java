@@ -39,24 +39,15 @@ public class EventService {
         eventRepository.delete(findEventById(id));
     }
 
-    public List<Event> findEventsByName(String name) {
-        return
-                eventRepository
-                        .findAll()
-                        .stream()
-                        .filter(a -> a.getName().contains(name))
-                        .collect(Collectors.toList());
+    public List<Event> findEventByName(String name) {
+        return eventRepository.findEventByName(name);
     }
 
     public List<Event> findEventByOrganizer(User user) {
-        return eventRepository
-                .findAll()
-                .stream()
-                .filter(a -> a.getOrganizer().equals(user))
-                .collect(Collectors.toList());
+        return eventRepository.findEventsByOrganizer(user);
     }
 
-    public List<Event> findEventByKeywordDescription(String keyword) {
+    /*public List<Event> findEventByKeywordDescription(String keyword) {
         return eventRepository
                 .findAll()
                 .stream()
@@ -72,10 +63,13 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
-    /*public List<Event> findEventByDate(LocalDateTime date) {
+    public List<Event> findEventByDate(LocalDateTime date) {
         return eventRepository
                 .findAll()
                 .stream()
-                .filter(a -> a.getStartDate().isBefore(date) && a.getEndDate().isAfter(date).
+                .filter(a ->
+                        a.getStartDate().isBefore(date) &&
+                        a.getEndDate().isAfter(date))
+                .collect(Collectors.toList());
     }*/
 }

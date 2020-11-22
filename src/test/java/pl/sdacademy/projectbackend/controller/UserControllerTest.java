@@ -20,8 +20,7 @@ import pl.sdacademy.projectbackend.service.UserService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +83,7 @@ public class UserControllerTest {
         String testUserJson = "{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
                 "  \"login\": \"" + TEST_USER_PASSWORD + "\",\n" +
-                "  \"email\": \""  + TEST_USER_PASSWORD +  "\"\n" +
+                "  \"email\": \"" + TEST_USER_PASSWORD + "\"\n" +
                 "}";
 
         // when
@@ -119,4 +118,16 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @DisplayName("When call deleteUserById should return status 200 and verify deleteUserById Method")
+    public void test5() throws Exception {
+        //given when
+
+        mockMvc
+                .perform(delete("/api/user/1"))
+                .andExpect(status().isOk());
+
+        //then
+        verify(userService).deleteUserById(1L);
+    }
 }

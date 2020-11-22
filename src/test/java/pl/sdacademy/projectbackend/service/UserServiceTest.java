@@ -1,16 +1,13 @@
 package pl.sdacademy.projectbackend.service;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Incubating;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
@@ -25,6 +22,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    public static final String TEST_USER_PASSWORD = "password";
+    public static final String TEST_USER_LOGIN = "test";
+    public static final String TEST_USER_EMAIL = "test@test.com";
+
     @Mock
     private UserRepository userRepository;
 
@@ -37,7 +38,7 @@ public class UserServiceTest {
     void setUp() {
         testUser = new User();
         testUser.setId(1L);
-        testUser.setLogin("test");
+        testUser.setLogin(TEST_USER_PASSWORD);
         testUser.setEmail("test@test.com");
         testUser.setPassword("password");
     }
@@ -51,7 +52,6 @@ public class UserServiceTest {
         User returnedUser = userService.findUserById(1L);
         //then
         assertThat(returnedUser).isEqualTo(testUser);
-
     }
 
     @Test
@@ -128,6 +128,16 @@ public class UserServiceTest {
         User newUser = userRepository.save(new User());
         //then
         assertThat(newUser.getLogin()).isNotEqualTo(testUser.getLogin() + 1);
+    }
+
+    @Test
+    @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
+    void test9() {
+        //given
+
+        //when
+
+        //then
     }
 
 }
