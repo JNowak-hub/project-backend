@@ -13,6 +13,7 @@ import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
 import pl.sdacademy.projectbackend.model.Comment;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.User;
+import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.service.EventService;
 
@@ -37,6 +38,7 @@ public class EventControllerTest {
     private Event testEvent;
     private User testUser;
     private Comment testComment;
+    private UserEvent userEvent;
 
     @BeforeEach
     void mockSetup() {
@@ -62,12 +64,16 @@ public class EventControllerTest {
         testEvent.setDescription("Description about event, some random text from description");
         testEvent.setStartDate(LocalDateTime.of(2020,10,20,20,00));
         testEvent.setEndDate(LocalDateTime.of(2020,10,21,20,00));
-        testEvent.setParticipants(Arrays.asList(testUser));
+
+        userEvent = new UserEvent(testUser, testEvent);
+
+        testEvent.setParticipants(Arrays.asList(userEvent));
         testEvent.setOrganizer(testUser);
         testEvent.setComments(Arrays.asList(testComment));
         testEvent.setLocation("Katowice");
         testEvent.setPrivateEvent(true);
-        }
+
+    }
 
     @Test
     @DisplayName("When findById gets not null Optional of Event then Event should be returned")

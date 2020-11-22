@@ -30,7 +30,7 @@ public class UserEvent {
     public UserEvent() {
     }
 
-    public UserEvent(UserEventId id, User user, Event event) {
+    public UserEvent(User user, Event event) {
         this.id = new UserEventId(user.getId(),event.getId());
         this.user = user;
         this.event = event;
