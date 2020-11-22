@@ -7,8 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
@@ -19,6 +23,8 @@ import pl.sdacademy.projectbackend.service.UserService;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -68,4 +74,46 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @DisplayName("When call deleteById should return status 410")
+    public void test3() throws Exception {
+        //given
+        when(userService.findUserById(1l)).thenReturn(testUser);
+        //when
+//        mockMvc
+//                .perform()
+        //then
+
+    }
+
+    @Test
+    @DisplayName("When call addUser should return status 201")
+    public void test5() throws Exception {
+        //given
+        when(userService.addUser(any(User.class))).thenReturn(testUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String testUserJson = objectMapper.writeValueAsString(testUser);
+        //when
+        ResultActions resultActions = mockMvc
+                .perform(post("/api/user/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(testUserJson));
+        System.out.println("RESPONSE");
+        System.out.println(resultActions.andReturn().getResponse().getContentAsString());
+        resultActions
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    @DisplayName("When call addUser should return status 404")
+    public void test6() throws Exception {
+        //given
+        when(userService.addUser(any(User.class))).thenThrow(UserNotFound.class);
+        // when then
+        mockMvc.perform(post("/api/user/add"))
+                .andExpect(status().isNotFound());
+    }
+
 }
