@@ -39,8 +39,8 @@ public class EventService {
         eventRepository.delete(findEventById(id));
     }
 
-    public List<Event> findEventsByName(String name) {
-        return eventRepository.findEventsByName(name);
+    public List<Event> findEventByName(String name) {
+        return eventRepository.findEventByName(name);
     }
 
     public List<Event> findEventByOrganizer(User user) {
