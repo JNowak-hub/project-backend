@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.projectbackend.model.Event;
@@ -24,4 +25,10 @@ public class EventController {
     public void deleteEventById(@PathVariable Long id) {
         eventService.deleteEventById(id);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<Event> addEvent(@RequestBody Event event){
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(event));
+    }
+
 }
