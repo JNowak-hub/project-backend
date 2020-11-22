@@ -7,6 +7,18 @@ on:
     branches: [ master ]
 
 jobs:
+  build:
+
+   runs-on: ubuntu-latest
+
+   steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      env:
+        DB_URL: ${{ secrets.DB_URL}}
+        DB_USERNAME: ${{ secrets.DB_USERNAME}}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) --build-arg url=$DB_URL --build-arg username=$DB_USERNAME --build-arg dbpassword=$DB_PASSWORD
 
   deploy:
     runs-on: ubuntu-latest
@@ -20,9 +32,9 @@ jobs:
           usedocker: true
           docker_build_args: |
             username
-            password
+            dbpassword
             url
         env:
           url: ${{ secrets.DB_URL}}
           username: ${{ secrets.DB_USERNAME}}
-          password: ${{ secrets.DB_PASSWORD}}
+          dbpassword: ${{ secrets.DB_PASSWORD}}

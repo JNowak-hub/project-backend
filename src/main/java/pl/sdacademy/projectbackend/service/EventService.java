@@ -8,11 +8,13 @@ import pl.sdacademy.projectbackend.repository.EventRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EventService {
     private EventRepository eventRepository;
 
     public EventService(EventRepository eventRepository) {
+
         this.eventRepository = eventRepository;
     }
 
@@ -36,5 +38,16 @@ public class EventService {
             throw new EventNotFound("No event with id " + id);
         }
         eventRepository.deleteById(id);
+    }
+
+    public List<Event> findEventsByName(String name) {
+        return
+                eventRepository
+                        .findAll()
+                        .stream()
+                        .filter(a -> a.getName().contains(name))
+                        .collect(Collectors.toUnmodifiableList());
+
+
     }
 }
