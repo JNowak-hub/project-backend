@@ -19,11 +19,10 @@ jobs:
           heroku_email: "kitebook.surf@gmail.com"
           usedocker: true
           docker_build_args: |
-            url
             username
             password
+            url
         env:
-          NODE_ENV: production
           url: ${{ secrets.DB_URL}}
           username: ${{ secrets.DB_USERNAME}}
           password: ${{ secrets.DB_PASSWORD}}
