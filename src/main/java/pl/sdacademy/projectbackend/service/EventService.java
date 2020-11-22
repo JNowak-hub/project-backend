@@ -35,11 +35,7 @@ public class EventService {
     }
 
     public void deleteEventById(Long id) {
-        Optional<Event> optionalEvent = eventRepository.findById(id);
-        if (optionalEvent.isEmpty()) {
-            throw new EventNotFound("No event with id " + id);
-        }
-        eventRepository.deleteById(id);
+        eventRepository.delete(findEventById(id));
     }
 
     public List<Event> findEventsByName(String name) {
