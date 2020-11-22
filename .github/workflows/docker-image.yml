@@ -20,9 +20,9 @@ jobs:
           usedocker: true
           docker_build_args: |
             username
-            password
+            dbpassword
             url
         env:
           url: ${{ secrets.DB_URL}}
           username: ${{ secrets.DB_USERNAME}}
-          password: ${{ secrets.DB_PASSWORD}}
+          dbpassword: ${{ secrets.DB_PASSWORD}}
