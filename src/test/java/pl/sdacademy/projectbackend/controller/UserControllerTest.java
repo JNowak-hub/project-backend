@@ -108,8 +108,17 @@ public class UserControllerTest {
     public void test4() throws Exception {
         //given
         when(userService.addUser(any(User.class))).thenThrow(UserNotFound.class);
-        // when then
-        mockMvc.perform(post("/api/user/add"))
+        // when
+        String testUserJson = "{\n" +
+                "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
+                "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
+                "  \"email\": \"" + TEST_USER_EMAIL + "\"\n" +
+                "}";
+        ResultActions resultActions = mockMvc.perform(post("/api/user/add")
+                .content(testUserJson)
+                .contentType(MediaType.APPLICATION_JSON));
+        //then
+        resultActions
                 .andExpect(status().isNotFound());
     }
 
