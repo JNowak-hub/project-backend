@@ -1,6 +1,8 @@
 package pl.sdacademy.projectbackend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Comment {
@@ -8,7 +10,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @NotNull
     private User user;
+    @NotEmpty
     private String content;
 
     public Comment() {}
@@ -28,6 +32,18 @@ public class Comment {
 
     public String getContent() {
         return content;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
