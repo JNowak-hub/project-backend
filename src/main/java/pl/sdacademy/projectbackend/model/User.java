@@ -110,6 +110,7 @@ public class User implements UserDetails {
         return id;
     }
 
+    @JsonIgnore
     public List<UserEvent> getEvents() {
         return events;
     }

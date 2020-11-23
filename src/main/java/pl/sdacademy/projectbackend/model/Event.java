@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 
 import javax.persistence.*;
@@ -110,6 +111,7 @@ public class Event {
         this.endDate = endDate;
     }
 
+    @JsonIgnore
     public List<UserEvent> getParticipants() {
         return participants;
     }
