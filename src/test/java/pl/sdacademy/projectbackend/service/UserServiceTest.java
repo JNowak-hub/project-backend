@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
@@ -38,9 +37,9 @@ public class UserServiceTest {
     void setUp() {
         testUser = new User();
         testUser.setId(1L);
-        testUser.setLogin(TEST_USER_PASSWORD);
-        testUser.setEmail("test@test.com");
-        testUser.setPassword("password");
+        testUser.setLogin(TEST_USER_LOGIN);
+        testUser.setEmail(TEST_USER_EMAIL);
+        testUser.setPassword(TEST_USER_PASSWORD);
     }
 
     @Test
@@ -71,7 +70,7 @@ public class UserServiceTest {
         //given
         when(userRepository.findUserByLogin(testUser.getLogin())).thenReturn(Optional.of(testUser));
         //when
-        UserDetails returnedUser = userService.loadUserByUsername("test");
+        UserDetails returnedUser = userService.loadUserByUsername(TEST_USER_LOGIN);
         //then
         assertThat(returnedUser.getUsername()).isEqualTo(testUser.getLogin());
     }
@@ -116,7 +115,7 @@ public class UserServiceTest {
         //when
         User newUser = userRepository.save(new User());
         //then
-        assertThat(newUser.getLogin()).isEqualTo("test");
+        assertThat(newUser.getLogin()).isEqualTo(testUser.getLogin());
     }
 
     @Test
