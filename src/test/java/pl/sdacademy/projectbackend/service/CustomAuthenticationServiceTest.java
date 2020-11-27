@@ -11,14 +11,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
-import pl.sdacademy.projectbackend.repository.EventRepository;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
