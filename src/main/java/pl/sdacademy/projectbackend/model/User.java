@@ -2,6 +2,7 @@ package pl.sdacademy.projectbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
@@ -21,19 +22,16 @@ public class User implements UserDetails {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Min(value = 3, message = "Name can not be shorter than 3 characters")
-    @Max(value = 13, message = "Name can not be longer than 13 characters")
+    @Length(min = 3, max = 13, message = "Name must be between 3-13 characters")
     private String firstName;
 
-    @NotBlank(message = "Last name can not be blank")
-    @NotEmpty(message = "Last name can not be empty")
     private String lastName;
 
     @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
 
     @Column(nullable = false)
-    @Min(value = 3, message = "Login can not be shorter than 3 characters")
+    @Length(min = 3, message = "login can not be shorter than 3 characters")
     private String login;
 
     @Column(nullable = false)

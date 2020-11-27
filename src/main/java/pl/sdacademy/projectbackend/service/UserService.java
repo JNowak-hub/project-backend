@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
@@ -43,6 +44,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User addUser(@Valid User user) {
+        if(userRepository.existsByLogin(user.getLogin())){
+            throw new UserAlreadyExists("User with login: " + user.getLogin() + " already exists");
+        }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);

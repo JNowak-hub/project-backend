@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
@@ -130,8 +131,19 @@ public class UserServiceTest {
     }
 
     @Test
-    @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
+    @DisplayName("When addUser then throw UserAlreadyExists")
     void test9() {
+        //given
+        when(userRepository.existsByLogin(testUser.getLogin())).thenReturn(true);
+        //when
+        UserAlreadyExists exception = assertThrows(UserAlreadyExists.class, () -> userService.addUser(testUser));
+        //then
+        assertThat("User with login: " + testUser.getLogin() + " already exists").isEqualTo(exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
+    void test10() {
         //given
 
         //when
