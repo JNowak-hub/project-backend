@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
+import pl.sdacademy.projectbackend.oauth.facebook.model.AuthProvider;
 import pl.sdacademy.projectbackend.service.UserService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -50,6 +51,7 @@ public class UserControllerTest {
         testUser.setPassword(TEST_USER_PASSWORD);
         testUser.setLogin(TEST_USER_LOGIN);
         testUser.setEmail(TEST_USER_EMAIL);
+        testUser.setProvider(AuthProvider.local);
     }
 
     @Test
@@ -80,10 +82,11 @@ public class UserControllerTest {
         //given
         when(userService.addUser(any(User.class))).thenReturn(testUser);
         //language=JSON
-        String testUserJson = "{\n" +
+        String testUserJson ="{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
-                "  \"login\": \"" + TEST_USER_PASSWORD + "\",\n" +
-                "  \"email\": \"" + TEST_USER_PASSWORD + "\"\n" +
+                "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
+                "  \"email\": \"" + TEST_USER_EMAIL + "\",\n" +
+                "  \"provider\": \"" + "local" + "\"\n" +
                 "}";
 
         // when
@@ -108,7 +111,8 @@ public class UserControllerTest {
         String testUserJson = "{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
                 "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
-                "  \"email\": \"" + TEST_USER_EMAIL + "\"\n" +
+                "  \"email\": \"" + TEST_USER_EMAIL + "\",\n" +
+                "  \"provider\": \"" + "local" + "\"\n" +
                 "}";
         ResultActions resultActions = mockMvc.perform(post("/api/user/add")
                 .content(testUserJson)

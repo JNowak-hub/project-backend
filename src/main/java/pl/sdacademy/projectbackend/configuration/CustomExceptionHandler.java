@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.sdacademy.projectbackend.exceptions.EventNotFound;
-import pl.sdacademy.projectbackend.exceptions.UserAlreadyAssigned;
-import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
-import pl.sdacademy.projectbackend.exceptions.UserNotFound;
+import pl.sdacademy.projectbackend.exceptions.*;
 
 @ControllerAdvice
 @RestController
@@ -47,5 +44,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public final ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public final ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
