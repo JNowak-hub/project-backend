@@ -18,6 +18,9 @@ jobs:
         DB_URL: ${{ secrets.DB_URL}}
         DB_USERNAME: ${{ secrets.DB_USERNAME}}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
+        CLIENT_ID: ${{ secret.CLIENT_ID}}
+        CLIENT_SECRET: ${{ secret.CLIENT_SECRET}}
+        JWT_SECRET: ${{ secret.JWT_SECRET}}
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) --build-arg url=$DB_URL --build-arg username=$DB_USERNAME --build-arg dbpassword=$DB_PASSWORD
 
   deploy:
@@ -38,3 +41,6 @@ jobs:
           url: ${{ secrets.DB_URL}}
           username: ${{ secrets.DB_USERNAME}}
           dbpassword: ${{ secrets.DB_PASSWORD}}
+          jwtsecret: ${{ secret.JWT_SECRET}}
+          clientId: ${{ secret.CLIENT_ID}}
+          clientSecret: ${{ secret.CLIENT_SECRET}}
