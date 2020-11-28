@@ -50,7 +50,6 @@ class EventServiceTest {
         testUser.setRole(Role.USER);
         testUser.setLogin("login");
         testUser.setPassword("password");
-
     }
 
     @Test
@@ -114,15 +113,16 @@ class EventServiceTest {
     }
 
     @Test
-    @DisplayName("when findEventByOrganizer gets not null then return list of Events")
+    @DisplayName("when findEventByOrganizerLogin is called then return list of Events")
     void test6() {
         List<Event> events1;
+        List<Event> events2;
+        String login = "myLogin";
         // given
-        when(eventRepository.findEventsByOrganizer(testUser)).thenReturn(events1 = Arrays.asList(testEvent));
+        when(eventRepository.findEventByOrganizerLogin(login)).thenReturn(events1 = Arrays.asList(testEvent));
         // when
-        List<Event> events2 = eventService.findEventByOrganizer(testUser);
+        events2 = eventService.findEventByOrganizer(login);
         // then
         assertThat(events1).isEqualTo(events2);
     }
-
 }

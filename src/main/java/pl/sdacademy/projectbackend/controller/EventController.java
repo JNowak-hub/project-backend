@@ -6,14 +6,21 @@ import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.service.EventService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("api/event")
+@RequestMapping("api/event/")
 public class EventController {
 
     private EventService eventService;
 
     public EventController(EventService eventService) {
         this.eventService = eventService;
+    }
+
+    @PostMapping("add")
+    public ResponseEntity<Event> addEvent(@RequestBody Event event){
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(event));
     }
 
     @GetMapping("{id}")
@@ -26,9 +33,14 @@ public class EventController {
         eventService.deleteEventById(id);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Event> addEvent(@RequestBody Event event){
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(event));
+    @GetMapping("{keyword}")
+    public ResponseEntity<List<Event>> findEventByNameContaining(@PathVariable String keyword) {
+        return ResponseEntity.ok(eventService.findEventByNameContaining(keyword));
+    }
+
+    @GetMapping("{organizerLogin}")
+    public ResponseEntity<List<Event>> findEventByOrganizerLogin(@PathVariable String organizerLogin) {
+        return ResponseEntity.ok(eventService.findEventByOrganizer(organizerLogin));
     }
 
 }

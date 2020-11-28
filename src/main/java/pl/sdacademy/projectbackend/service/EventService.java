@@ -3,7 +3,6 @@ package pl.sdacademy.projectbackend.service;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Event;
-import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
@@ -13,15 +12,15 @@ import java.util.Optional;
 @Service
 public class EventService {
     private EventRepository eventRepository;
-    private SecurityContextUtils securityContestUtils;
+    private SecurityContextUtils securityContextUtils;
 
-    public EventService(EventRepository eventRepository, SecurityContextUtils securityContestUtils) {
-        this.securityContestUtils = securityContestUtils;
+    public EventService(EventRepository eventRepository, SecurityContextUtils securityContextUtils) {
         this.eventRepository = eventRepository;
+        this.securityContextUtils = securityContextUtils;
     }
 
     public Event addEvent(Event event) {
-        event.setOrganizer(securityContestUtils.getCurrentUser());
+        event.setOrganizer(securityContextUtils.getCurrentUser());
         return eventRepository.save(event);
     }
 
@@ -41,8 +40,8 @@ public class EventService {
         return eventRepository.findEventByNameContaining(name);
     }
 
-    public List<Event> findEventByOrganizer(User user) {
-        return eventRepository.findEventsByOrganizer(user);
+    public List<Event> findEventByOrganizer(String login) {
+        return eventRepository.findEventByOrganizerLogin(login);
     }
 
     /*public List<Event> findEventByKeywordDescription(String keyword) {
