@@ -1,6 +1,5 @@
 package pl.sdacademy.projectbackend.service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +27,10 @@ public class UserService implements UserDetailsService {
         this.encoder = encoder;
     }
 
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
     public User findUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
@@ -44,7 +47,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User addUser(@Valid User user) {
-        if(userRepository.existsByLogin(user.getLogin())){
+        if (userRepository.existsByLogin(user.getLogin())) {
             throw new UserAlreadyExists("User with login: " + user.getLogin() + " already exists");
         }
         user.setPassword(encoder.encode(user.getPassword()));
@@ -54,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     public User findUserByEmail(String email) {
         Optional<User> userByEmail = userRepository.findUserByEmail(email);
-        if (userByEmail.isEmpty()){
+        if (userByEmail.isEmpty()) {
             throw new UserNotFound("User with email: " + email + " doesn't exists");
         }
         return userByEmail.get();

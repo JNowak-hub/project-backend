@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
+import pl.sdacademy.projectbackend.oauth.facebook.model.AuthProvider;
+import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -34,9 +36,7 @@ public class User implements UserDetails {
     @Length(min = 3, message = "login can not be shorter than 3 characters")
     private String login;
 
-    @Column(nullable = false)
-    @NotEmpty(message = "Password can not be empty")
-    @NotBlank(message = "Password can not be blank")
+    @NotBlank(message = "Password can not be blank", groups = StandardUserValidation.class)
     private String password;
 
     @Column(nullable = false)
@@ -54,6 +54,12 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY
     )
     List<UserEvent> events;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String imageUrl;
 
     public User() {
     }
@@ -174,4 +180,19 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public AuthProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

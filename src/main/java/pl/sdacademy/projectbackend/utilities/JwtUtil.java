@@ -1,11 +1,12 @@
 package pl.sdacademy.projectbackend.utilities;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.exceptions.BadRequestException;
+import pl.sdacademy.projectbackend.oauth.facebook.model.UserPrincipal;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -56,5 +57,60 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
+
+    private String extractRole(UserPrincipal userPrincipal) {
+        return userPrincipal.getAuthorities()
+                .toString()
+                .replace('[', ' ')
+                .replace(']', ' ')
+                .trim();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.parseLong(claims.getSubject());
+    }
+
+
+    public String generateToken(Authentication authentication) {
+        return createToken(authentication);
+    }
+
+    private String createToken(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
+
+        return Jwts.builder()
+                .setSubject(userPrincipal.getEmail())
+                .claim("email", userPrincipal.getUsername())
+                .claim("role", extractRole(userPrincipal))
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
+
+    public boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(authToken);
+            return true;
+        } catch (SignatureException ex) {
+            throw new BadRequestException("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            throw new BadRequestException("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            throw new BadRequestException("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            throw new BadRequestException("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("JWT claims string is empty.");
+        }
+    }
 
 }

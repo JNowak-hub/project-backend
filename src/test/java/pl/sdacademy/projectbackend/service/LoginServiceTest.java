@@ -79,7 +79,7 @@ public class LoginServiceTest {
         BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> loginService.login(authenticationRequest));
         //then
         verify(userService, never()).loadUserByUsername(any());
-        verify(jwtUtil, never()).generateToken(any());
+        verify(jwtUtil, never()).generateToken(user);
     }
 
 
