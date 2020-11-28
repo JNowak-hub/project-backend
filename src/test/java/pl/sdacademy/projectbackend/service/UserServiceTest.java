@@ -135,7 +135,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
-    void test11() {
+    void test9() {
         //given
         when(userRepository.existsByLogin(testUser.getLogin())).thenReturn(true);
         //when
@@ -158,7 +158,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("When findUserByEmail gets null Optional of User then UsetNotFound exception is thrown")
-    void test10() {
+    void test11() {
         //given
         when(userRepository.findUserByEmail("test")).thenReturn(Optional.empty());
         //when
@@ -169,7 +169,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("When findUserByFirstNameAndLastName is called then returns User")
-    void test11() {
+    void test12() {
         List<User> testUsers = Arrays.asList(testUser);
         //given
         when(userRepository.findUserByFirstNameAndLastName("firstName","lastName")).thenReturn(testUsers);
