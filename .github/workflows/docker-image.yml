@@ -37,6 +37,9 @@ jobs:
             username
             dbpassword
             url
+            jwtsecret
+            clientId
+            clientSecret
         env:
           url: ${{ secrets.DB_URL}}
           username: ${{ secrets.DB_USERNAME}}
