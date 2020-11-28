@@ -12,7 +12,7 @@ import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
-import pl.sdacademy.projectbackend.utilities.SecurityContestUtils;
+import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ class EventServiceTest {
     @Mock
     private EventRepository eventRepository;
     @Mock
-    private SecurityContestUtils securityContestUtils;
+    private SecurityContextUtils securityContestUtils;
 
     @InjectMocks
     private EventService eventService;

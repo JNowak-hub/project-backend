@@ -1,23 +1,21 @@
 package pl.sdacademy.projectbackend.service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
-import pl.sdacademy.projectbackend.utilities.SecurityContestUtils;
+import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
     private EventRepository eventRepository;
-    private SecurityContestUtils securityContestUtils;
+    private SecurityContextUtils securityContestUtils;
 
-    public EventService(EventRepository eventRepository, SecurityContestUtils securityContestUtils) {
+    public EventService(EventRepository eventRepository, SecurityContextUtils securityContestUtils) {
         this.securityContestUtils = securityContestUtils;
         this.eventRepository = eventRepository;
     }
