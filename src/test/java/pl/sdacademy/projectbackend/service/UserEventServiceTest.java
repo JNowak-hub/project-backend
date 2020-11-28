@@ -19,7 +19,7 @@ import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 import pl.sdacademy.projectbackend.repository.UserEventRepository;
-import pl.sdacademy.projectbackend.utilities.SecurityContestUtils;
+import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import java.time.LocalDateTime;
 
@@ -38,7 +38,7 @@ public class UserEventServiceTest {
     @Mock
     private UserEventRepository repository;
     @Mock
-    private SecurityContestUtils securityContestUtils;
+    private SecurityContextUtils securityContextUtils;
     @InjectMocks
     private UserEventService service;
 
@@ -68,7 +68,7 @@ public class UserEventServiceTest {
         //given
         UserEvent userEvent = new UserEvent(testUser, testEvent);
         when(repository.save(any())).thenReturn(userEvent);
-        when(securityContestUtils.getCurrentUser()).thenReturn(testUser);
+        when(securityContextUtils.getCurrentUser()).thenReturn(testUser);
         when(eventService.findEventById(1L)).thenReturn(testEvent);
         when(repository.existsById(any())).thenReturn(false);
         //when
@@ -81,7 +81,7 @@ public class UserEventServiceTest {
     @DisplayName("When takePartInEvent then throw UserNotFound exception")
     public void test2(){
         //given
-        when(securityContestUtils.getCurrentUser()).thenThrow(UserNotFound.class);
+        when(securityContextUtils.getCurrentUser()).thenThrow(UserNotFound.class);
         when(eventService.findEventById(1L)).thenReturn(testEvent);
         //when then
         UserNotFound exception = assertThrows(UserNotFound.class, () -> service.takePartInEvent(1L));
@@ -92,7 +92,7 @@ public class UserEventServiceTest {
     @DisplayName("When takePartInEvent then throw UserAlreadyAssigned exception")
     public void test3(){
         //given
-        when(securityContestUtils.getCurrentUser()).thenReturn(testUser);
+        when(securityContextUtils.getCurrentUser()).thenReturn(testUser);
         when(eventService.findEventById(1L)).thenReturn(testEvent);
         when(repository.existsById(any())).thenReturn(true);
         //when

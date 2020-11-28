@@ -98,7 +98,7 @@ public class UserServiceTest {
         //when
         userService.deleteUserById(1L);
         //then
-        verify(userRepository, Mockito.times(1)).delete(testUser);
+        verify(userRepository).delete(testUser);
     }
 
     @Test

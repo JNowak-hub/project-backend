@@ -21,11 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class SecurityContestUtilsTest {
+public class SecurityContextUtilsTest {
 
     private User testUser;
 
-    private SecurityContestUtils utils = new SecurityContestUtils();
+    private SecurityContextUtils utils = new SecurityContextUtils();
 
     @BeforeEach
     void setUp(){
