@@ -32,7 +32,7 @@ public class JwtUtilTest {
     private User user;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         user = new User();
         user.setPassword("password");
@@ -42,7 +42,7 @@ public class JwtUtilTest {
 
     @Test
     @DisplayName("When generateToken then return token as String")
-    public void test1(){
+    public void test1() {
         //given when
         String token = jwtUtil.generateToken(user);
         //then

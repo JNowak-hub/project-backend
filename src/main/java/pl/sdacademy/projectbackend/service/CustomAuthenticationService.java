@@ -28,7 +28,7 @@ public class CustomAuthenticationService implements AuthenticationManager {
 
         UserDetails user = userService.loadUserByUsername(userLogin);
 
-        if(!passwordEncoder.matches(password, user.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Bad credentials");
         }
 

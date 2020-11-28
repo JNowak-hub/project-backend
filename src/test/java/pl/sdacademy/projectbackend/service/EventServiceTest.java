@@ -28,7 +28,7 @@ class EventServiceTest {
     @Mock
     private EventRepository eventRepository;
     @Mock
-    private SecurityContextUtils securityContestUtils;
+    private SecurityContextUtils securityContextUtils;
 
     @InjectMocks
     private EventService eventService;
@@ -54,22 +54,10 @@ class EventServiceTest {
     }
 
     @Test
-    @DisplayName("When findEventByNameContaining gets at least one record then returns list")
-    void test1() {
-        List<Event> eventss;
-        // given
-        when(eventRepository.findEventByNameContaining(eq("test"))).thenReturn(eventss = Arrays.asList(testEvent));
-        // when
-        List<Event> events = eventService.findEventByNameContaining("test");
-        // then
-        assertThat(events).isEqualTo(eventss);
-    }
-
-    @Test
     @DisplayName("When addEvent is called it then return Event")
-    void test2() {
+    void test1() {
         // given
-        when(securityContestUtils.getCurrentUser()).thenReturn(testUser);
+        when(securityContextUtils.getCurrentUser()).thenReturn(testUser);
         when(eventRepository.save(any())).thenReturn(testEvent);
         // when
         Event savedEvent = eventService.addEvent(testEvent);
@@ -80,17 +68,17 @@ class EventServiceTest {
 
     @Test
     @DisplayName("When addEvent is called it then return Event")
-    void test5() {
+    void test2() {
         // given
-        when(securityContestUtils.getCurrentUser()).thenThrow(UserNotFound.class);
+        when(securityContextUtils.getCurrentUser()).thenThrow(UserNotFound.class);
         // when
-        assertThrows(UserNotFound.class, () ->  eventService.addEvent(testEvent));
+        assertThrows(UserNotFound.class, () -> eventService.addEvent(testEvent));
         // then
         verify(eventRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("When findEventByIt gets not null Optional then Event should be returned")
+    @DisplayName("When findEventById gets not null Optional then Event should be returned")
     void test3() {
         // given
         when(eventRepository.findById(1L)).thenReturn(Optional.ofNullable(testEvent));
@@ -111,6 +99,30 @@ class EventServiceTest {
         // then
         // oczekujemy, ze zostala wywolana metoda delete repozytorium z parametrem o wartosci id usuwanego eventu
         verify(eventRepository).delete(testEvent);
+    }
+
+    @Test
+    @DisplayName("When findEventByNameContaining gets at least one record then returns list of Events")
+    void test5() {
+        List<Event> events1;
+        // given
+        when(eventRepository.findEventByNameContaining(eq("test"))).thenReturn(events1 = Arrays.asList(testEvent));
+        // when
+        List<Event> events2 = eventService.findEventByNameContaining("test");
+        // then
+        assertThat(events2).isEqualTo(events1);
+    }
+
+    @Test
+    @DisplayName("when findEventByOrganizer gets not null then return list of Events")
+    void test6() {
+        List<Event> events1;
+        // given
+        when(eventRepository.findEventsByOrganizer(testUser)).thenReturn(events1 = Arrays.asList(testEvent));
+        // when
+        List<Event> events2 = eventService.findEventByOrganizer(testUser);
+        // then
+        assertThat(events1).isEqualTo(events2);
     }
 
 }
