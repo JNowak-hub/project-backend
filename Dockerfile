@@ -2,9 +2,11 @@ FROM maven:3.6.3-jdk-11
 ARG username
 ARG dbpassword
 ARG url
+ARG jwtsecret
 ENV username=$username
 ENV dbpassword=$dbpassword
 ENV url=$url
+ENV jwtsecret=$jwtsecret
 ADD . /backend
 WORKDIR /backend
 RUN mvn install

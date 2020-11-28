@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
@@ -74,7 +74,7 @@ public class UserServiceTest {
         //given
         when(userRepository.findUserByLogin(testUser.getLogin())).thenReturn(Optional.of(testUser));
         //when
-        UserDetails returnedUser = userService.loadUserByUsername("test");
+        UserDetails returnedUser = userService.loadUserByUsername(TEST_USER_LOGIN);
         //then
         assertThat(returnedUser.getUsername()).isEqualTo(testUser.getLogin());
     }
@@ -119,7 +119,7 @@ public class UserServiceTest {
         //when
         User newUser = userRepository.save(new User());
         //then
-        assertThat(newUser.getLogin()).isEqualTo("test");
+        assertThat(newUser.getLogin()).isEqualTo(testUser.getLogin());
     }
 
     @Test
@@ -135,8 +135,20 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
-    void test9() {
+    void test11() {
         //given
+        when(userRepository.existsByLogin(testUser.getLogin())).thenReturn(true);
+        //when
+        UserAlreadyExists exception = assertThrows(UserAlreadyExists.class, () -> userService.addUser(testUser));
+        //then
+        assertThat("User with login: " + testUser.getLogin() + " already exists").isEqualTo(exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("When findUserByEmail gets not null Optional of User then returns user")
+    void test10() {
+        //given
+
         when(userRepository.findUserByEmail("test")).thenReturn(Optional.ofNullable(testUser));
         //when
         User userByEmail = userService.findUserByEmail("test");
