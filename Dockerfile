@@ -3,10 +3,14 @@ ARG username
 ARG dbpassword
 ARG url
 ARG jwtsecret
+ARG clientId
+ARG clientSecret
 ENV username=$username
 ENV dbpassword=$dbpassword
 ENV url=$url
 ENV jwtsecret=$jwtsecret
+ENV clientId=$clientId
+ENV clientSecret=$clientSecret
 ADD . /backend
 WORKDIR /backend
 RUN mvn install
