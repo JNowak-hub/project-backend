@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
@@ -18,6 +19,9 @@ import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.oauth.facebook.model.AuthProvider;
 import pl.sdacademy.projectbackend.service.UserService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
@@ -50,7 +54,7 @@ public class UserControllerTest {
         testUser = new User();
         testUser.setPassword(TEST_USER_PASSWORD);
         testUser.setLogin(TEST_USER_LOGIN);
-        testUser.setEmail(TEST_USER_EMAIL);
+        testUser.setEmail(TEST_USER_PASSWORD);
         testUser.setProvider(AuthProvider.local);
     }
 
@@ -123,15 +127,55 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("When call deleteUserById should return status 200 and verify deleteUserById Method")
+    @DisplayName("When call deleteUserById should return status 204 and verify deleteUserById Method")
     public void test5() throws Exception {
         //given when
 
         mockMvc
                 .perform(delete("/api/user/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         //then
         verify(userService).deleteUserById(1L);
+    }
+
+    @Test
+    @DisplayName("When call findUserByMail should return status 200 and User response body")
+    public void test6() throws Exception {
+        //given
+        when(userService.findUserByEmail("login@login.com")).thenReturn(testUser);
+        //when
+        mockMvc
+                .perform(get("/api/user/by-email/login@login.com/"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login", is(testUser.getLogin())));
+        //then
+    }
+
+    @Test
+    @DisplayName("When call findUserByFirstAndLastName should return status 200 and User response body")
+    public void test7() throws Exception {
+        //given
+        List<User> testUsers = Arrays.asList(testUser);
+        when(userService.findUserByFirstNameAndLastName("firstName","lastName")).thenReturn(testUsers);
+        //when then
+        ResultActions result = mockMvc
+                .perform(get("/api/user/firstName/lastName"));
+
+        result
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].login", is(testUser.getLogin())));
+    }
+
+    @Test
+    @DisplayName("When call findUserByFirstAndLastName should return status 404")
+    public void test8() throws Exception {
+        //given
+        List<User> testUsers = Arrays.asList(testUser);
+        when(userService.findUserByFirstNameAndLastName(anyString(),anyString())).thenThrow(UserNotFound.class);
+        //when then
+        mockMvc
+                .perform(get("/api/user/firstName/lastName"))
+                .andExpect(status().isNotFound());
     }
 }
