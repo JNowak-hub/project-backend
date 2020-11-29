@@ -5,6 +5,8 @@ ARG url
 ARG jwtsecret
 ARG clientId
 ARG clientSecret
+ARG googlesecret
+ENV googlesecret=$googlesecret
 ENV username=$username
 ENV dbpassword=$dbpassword
 ENV url=$url
