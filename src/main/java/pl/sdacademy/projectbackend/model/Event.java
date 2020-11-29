@@ -50,7 +50,8 @@ public class Event {
     private List<Comment> comments;
 
     @NotNull(message = "Location can not be null")
-    private String location;
+    @ManyToOne
+    private Location location;
 
     @NotNull
     private Boolean privateEvent;
@@ -58,8 +59,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate, List<UserEvent> participants, User organizer, List<Comment> comments, String location, Boolean privateEvent) {
-        this.id = id;
+    public Event(@NotBlank(message = "Event name can not be blank") @NotEmpty(message = "Event name can not be empty") @NotNull String name, @Min(value = 20, message = "Description can not be shorter than 20 characters") String description, @FutureOrPresent @NotNull LocalDateTime startDate, @NotNull @Future LocalDateTime endDate, List<UserEvent> participants, @NotNull User organizer, List<Comment> comments, @NotNull(message = "Location can not be null") Location location, @NotNull Boolean privateEvent) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;
@@ -136,11 +136,11 @@ public class Event {
         this.comments = comments;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

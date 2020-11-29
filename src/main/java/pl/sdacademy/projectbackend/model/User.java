@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Length(min = 3, message = "login can not be shorter than 3 characters")
     private String login;
 
