@@ -15,6 +15,7 @@ import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Comment;
 import pl.sdacademy.projectbackend.model.Event;
+import pl.sdacademy.projectbackend.model.Location;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 import pl.sdacademy.projectbackend.service.EventService;
@@ -73,7 +74,7 @@ public class EventControllerTest {
         testEvent.setParticipants(Arrays.asList(userEvent));
         testEvent.setOrganizer(testUser);
         testEvent.setComments(Arrays.asList(testComment));
-        testEvent.setLocation("Katowice");
+        testEvent.setLocation(new Location("address", 20.20, 10.10));
         testEvent.setPrivateEvent(true);
 
     }
@@ -88,7 +89,7 @@ public class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", is(testEvent.getName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", is(testEvent.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.location", is(testEvent.getLocation())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location.address", is(testEvent.getLocation().getAddress())));
     }
 
     @Test

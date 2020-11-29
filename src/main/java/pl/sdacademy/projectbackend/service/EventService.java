@@ -1,11 +1,14 @@
 package pl.sdacademy.projectbackend.service;
 
+import com.google.maps.errors.ApiException;
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.exceptions.BadRequestException;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Event;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,15 +16,30 @@ import java.util.Optional;
 public class EventService {
     private EventRepository eventRepository;
     private SecurityContextUtils securityContextUtils;
+    private GoogleMapsApi googleMapsApi;
 
-    public EventService(EventRepository eventRepository, SecurityContextUtils securityContextUtils) {
+    public EventService(EventRepository eventRepository, SecurityContextUtils securityContextUtils, GoogleMapsApi googleMapsApi) {
         this.eventRepository = eventRepository;
         this.securityContextUtils = securityContextUtils;
+        this.googleMapsApi = googleMapsApi;
     }
 
-    public Event addEvent(Event event) {
+    public Event addEvent(Event event, String locationName) {
+        addLocationToEventByGoogleApi(event, locationName);
         event.setOrganizer(securityContextUtils.getCurrentUser());
         return eventRepository.save(event);
+    }
+
+    private void addLocationToEventByGoogleApi(Event event, String locationName) {
+        try {
+            event.setLocation(googleMapsApi.saveLocationFromGoogleMapsApi(locationName));
+        } catch (InterruptedException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (ApiException e) {
+            throw new BadRequestException(e.getMessage());
+        } catch (IOException e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
     public Event findEventById(Long id) {

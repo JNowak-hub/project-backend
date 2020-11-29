@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.service;
 
+import com.google.maps.errors.ApiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +10,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.Event;
+import pl.sdacademy.projectbackend.model.Location;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +32,15 @@ class EventServiceTest {
     private EventRepository eventRepository;
     @Mock
     private SecurityContextUtils securityContextUtils;
+    @Mock
+    private GoogleMapsApi googleMapsApi;
 
     @InjectMocks
     private EventService eventService;
 
     private Event testEvent;
     private User testUser;
+    private Location location;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +50,8 @@ class EventServiceTest {
         testEvent.setStartDate(LocalDateTime.of(2020, 12, 11, 16, 30));
         testEvent.setEndDate(LocalDateTime.of(2020, 12, 11, 21, 30));
         testEvent.setOrganizer(testUser);
-        testEvent.setLocation("Poland");
+        location = new Location("address", 20.20, 10.10);
+        testEvent.setLocation(location);
 
         testUser = new User();
         testUser.setRole(Role.USER);
@@ -54,12 +61,13 @@ class EventServiceTest {
 
     @Test
     @DisplayName("When addEvent is called it then return Event")
-    void test1() {
+    void test1() throws InterruptedException, ApiException, IOException {
         // given
         when(securityContextUtils.getCurrentUser()).thenReturn(testUser);
         when(eventRepository.save(any())).thenReturn(testEvent);
+        when(googleMapsApi.saveLocationFromGoogleMapsApi(anyString())).thenReturn(location);
         // when
-        Event savedEvent = eventService.addEvent(testEvent);
+        Event savedEvent = eventService.addEvent(testEvent,"address");
         // then
         assertThat(testUser).isEqualTo(savedEvent.getOrganizer());
         assertThat(testEvent.getName()).isEqualTo(savedEvent.getName());
@@ -71,7 +79,7 @@ class EventServiceTest {
         // given
         when(securityContextUtils.getCurrentUser()).thenThrow(UserNotFound.class);
         // when
-        assertThrows(UserNotFound.class, () -> eventService.addEvent(testEvent));
+        assertThrows(UserNotFound.class, () -> eventService.addEvent(testEvent,"address"));
         // then
         verify(eventRepository, never()).save(any());
     }

@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import pl.sdacademy.projectbackend.exceptions.UserAlreadyAssigned;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.Event;
+import pl.sdacademy.projectbackend.model.Location;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
@@ -59,7 +60,7 @@ public class UserEventServiceTest {
         testEvent.setStartDate(LocalDateTime.of(2020, 12, 11, 16, 30));
         testEvent.setEndDate(LocalDateTime.of(2020, 12, 11, 21, 30));
         testEvent.setOrganizer(testUser);
-        testEvent.setLocation("Poland");
+        testEvent.setLocation(new Location("address", 10.10,20.20));
     }
 
     @Test

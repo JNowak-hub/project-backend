@@ -8,7 +8,6 @@ import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.service.UserService;
 import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
-import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 @RestController

@@ -18,9 +18,9 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @PostMapping("add")
-    public ResponseEntity<Event> addEvent(@RequestBody Event event){
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(event));
+    @PostMapping("add/{locationName}")
+    public ResponseEntity<Event> addEvent(@RequestBody Event event, @PathVariable String locationName){
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(event, locationName));
     }
 
     @GetMapping("{id}")
