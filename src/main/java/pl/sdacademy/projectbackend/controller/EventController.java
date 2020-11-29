@@ -33,12 +33,12 @@ public class EventController {
         eventService.deleteEventById(id);
     }
 
-    @GetMapping("{keyword}")
+    @GetMapping("/name/{keyword}")
     public ResponseEntity<List<Event>> findEventByNameContaining(@PathVariable String keyword) {
         return ResponseEntity.ok(eventService.findEventByNameContaining(keyword));
     }
 
-    @GetMapping("{organizerLogin}")
+    @GetMapping("/login/{organizerLogin}")
     public ResponseEntity<List<Event>> findEventByOrganizerLogin(@PathVariable String organizerLogin) {
         return ResponseEntity.ok(eventService.findEventByOrganizer(organizerLogin));
     }
