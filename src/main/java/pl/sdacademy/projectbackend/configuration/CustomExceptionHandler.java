@@ -1,9 +1,11 @@
 package pl.sdacademy.projectbackend.configuration;
 
+import org.hibernate.mapping.Set;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,17 +13,20 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.sdacademy.projectbackend.exceptions.*;
 
+import java.util.stream.Collectors;
+
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        FieldError::getField,
+                        Collectors.mapping(FieldError::getDefaultMessage, Collectors.toSet()))
+                ));
     }
 
     @ExceptionHandler(UserNotFound.class)
