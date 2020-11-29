@@ -6,13 +6,13 @@ ARG jwtsecret
 ARG clientId
 ARG clientSecret
 ARG googlesecret
-ENV googlesecret=$googlesecret
 ENV username=$username
 ENV dbpassword=$dbpassword
 ENV url=$url
 ENV jwtsecret=$jwtsecret
 ENV clientId=$clientId
 ENV clientSecret=$clientSecret
+ENV googlesecret=$googlesecret
 ADD . /backend
 WORKDIR /backend
 RUN mvn install
