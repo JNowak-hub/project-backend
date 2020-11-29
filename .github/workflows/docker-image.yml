@@ -22,7 +22,7 @@ jobs:
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET}}
         JWT_SECRET: ${{ secrets.JWT_SECRET}}
         GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET}}
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) --build-arg url=$DB_URL --build-arg username=$DB_USERNAME --build-arg dbpassword=$DB_PASSWORD
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) --build-arg url=$DB_URL --build-arg username=$DB_USERNAME --build-arg dbpassword=$DB_PASSWORD --build-arg googlesecret=$GOOGLE_SECRET
 
   deploy:
     runs-on: ubuntu-latest
