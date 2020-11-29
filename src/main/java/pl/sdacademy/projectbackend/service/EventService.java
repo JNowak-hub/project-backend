@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.BadRequestException;
 import pl.sdacademy.projectbackend.exceptions.EventNotFound;
 import pl.sdacademy.projectbackend.model.Event;
+import pl.sdacademy.projectbackend.model.Location;
 import pl.sdacademy.projectbackend.repository.EventRepository;
 import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +62,18 @@ public class EventService {
 
     public List<Event> findEventByOrganizer(String login) {
         return eventRepository.findEventByOrganizerLogin(login);
+    }
+
+    public List<Event> findEventByStartDate(LocalDateTime startDate) {
+        return eventRepository.findEventByStartDate(startDate);
+    }
+
+    public List<Event> findEventByEndDate(LocalDateTime endDate) {
+        return eventRepository.findEventByEndDate(endDate);
+    }
+
+    public List<Event> findEventByLocation(Location location) {
+        return eventRepository.findEventByLocation(location);
     }
 
     /*public List<Event> findEventByKeywordDescription(String keyword) {

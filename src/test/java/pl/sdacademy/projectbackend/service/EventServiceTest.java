@@ -133,4 +133,47 @@ class EventServiceTest {
         // then
         assertThat(events1).isEqualTo(events2);
     }
+
+    @Test
+    @DisplayName("When findEventByStartDate is called then return list of events")
+    void test7(){
+        List<Event> events1;
+        List<Event> events2;
+        LocalDateTime partyStart = LocalDateTime.of(2020, 12, 11, 21, 30);
+        //given
+        when(eventRepository.findEventByStartDate(partyStart)).thenReturn(events1 = Arrays.asList(testEvent));
+        //when
+        events2 = eventService.findEventByStartDate(partyStart);
+        //then
+        assertThat(events1).isEqualTo(events2);
+    }
+
+    @Test
+    @DisplayName("When findEventByEndDate is called then return list of events")
+    void test8() {
+        List<Event> events1;
+        List<Event> events2;
+        LocalDateTime partyEnd = LocalDateTime.of(2020, 12, 11, 21, 30);
+        //given
+        when(eventRepository.findEventByEndDate(partyEnd)).thenReturn(events1 = Arrays.asList(testEvent));
+        //when
+        events2 = eventService.findEventByEndDate(partyEnd);
+        //then
+        assertThat(events1).isEqualTo(events2);
+    }
+
+    @Test
+    @DisplayName("When findEventByEndDate is called then return list of events")
+    void test9() {
+        List<Event> events1;
+        List<Event> events2;
+        Location location = new Location("address", 20.20, 10.10);
+        //given
+        when(eventRepository.findEventByLocation(location)).thenReturn(events1 = Arrays.asList(testEvent));
+        //when
+        events2 = eventService.findEventByLocation(location);
+        //then
+        assertThat(events1).isEqualTo(events2);
+    }
+
 }
