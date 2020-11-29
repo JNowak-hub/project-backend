@@ -13,10 +13,7 @@ import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -177,6 +174,18 @@ public class UserServiceTest {
         List<User> userByFirstNameAndLastName = userService.findUserByFirstNameAndLastName("firstName", "lastName");
         //then
         assertThat(userByFirstNameAndLastName).isEqualTo(testUsers);
+    }
+
+    @Test
+    @DisplayName("When findUserByFirstNameAndLastName is called then returns empty list")
+    void test13() {
+        List<User> testUsers = Collections.emptyList();
+        //given
+        when(userRepository.findUserByFirstNameAndLastName(anyString(),anyString())).thenReturn(testUsers);
+        //when
+        List<User> userByFirstNameAndLastName = userService.findUserByFirstNameAndLastName("firstName", "lastName");
+        //then
+        assertThat(userByFirstNameAndLastName).isNotSameAs(testUsers);
     }
 
 }

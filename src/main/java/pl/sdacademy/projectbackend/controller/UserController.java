@@ -1,6 +1,7 @@
 package pl.sdacademy.projectbackend.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import pl.sdacademy.projectbackend.service.UserService;
 import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
 import javax.validation.groups.Default;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
@@ -26,8 +28,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User");
     }
 
     @PostMapping("/add")
@@ -35,4 +38,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
 
+    // trailing slash to enable dot as parameter char
+    @GetMapping(path = "/by-email/{email}/")
+    public ResponseEntity<User> getUserByMail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.findUserByEmail(email));
+    }
+
+    @GetMapping("/{firstname}/{lastname}")
+    public ResponseEntity<List<User>> getUserByFullName(@PathVariable String firstname, @PathVariable String lastname){
+        return ResponseEntity.ok(userService.findUserByFirstNameAndLastName(firstname, lastname));
+    }
 }
