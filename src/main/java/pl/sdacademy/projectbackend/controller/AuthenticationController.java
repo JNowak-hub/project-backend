@@ -30,9 +30,9 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginService.login(request));
     }
 
-    @PostMapping("/verifyToken")
-    public ResponseEntity<Boolean> isTokenValid(@RequestParam String token){
-        return ResponseEntity.ok(loginService.validateToken(token));
+    @GetMapping("/verifyToken")
+    public ResponseEntity<Void> isTokenValid(){
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{error}")
