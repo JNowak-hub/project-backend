@@ -29,8 +29,9 @@ public class EventController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteEventById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteEventById(@PathVariable Long id) {
         eventService.deleteEventById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Event deleted");
     }
 
     @GetMapping("/name/{keyword}")
