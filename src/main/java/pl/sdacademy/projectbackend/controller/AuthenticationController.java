@@ -30,6 +30,11 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginService.login(request));
     }
 
+    @PostMapping("/verifyToken")
+    public ResponseEntity<Boolean> isTokenValid(@RequestParam String token){
+        return ResponseEntity.ok(loginService.validateToken(token));
+    }
+
     @GetMapping("{error}")
     public ResponseEntity<String> failFacebookAuthentication(@Valid @PathVariable String error, HttpServletResponse response) {
         try {

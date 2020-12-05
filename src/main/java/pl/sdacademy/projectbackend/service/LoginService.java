@@ -30,4 +30,8 @@ public class LoginService {
                 )
         );
     }
+
+    public Boolean validateToken(String token){
+        return jwtUtil.validateToken(token);
+    }
 }
