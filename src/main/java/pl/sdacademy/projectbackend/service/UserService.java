@@ -47,6 +47,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User addUser(@Valid User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new UserAlreadyExists("Email : " + user.getEmail() + " is already taken");
+        }
         if (userRepository.existsByLogin(user.getLogin())) {
             throw new UserAlreadyExists("User with login: " + user.getLogin() + " already exists");
         }

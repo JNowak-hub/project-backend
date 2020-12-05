@@ -1,5 +1,6 @@
 package pl.sdacademy.projectbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
@@ -27,9 +28,11 @@ public class User implements UserDetails {
     @Length(min = 3, max = 13, message = "Name must be between 3-13 characters")
     private String firstName;
 
+    @Length(min = 3, message = "Last name must have at least 3 characters")
     private String lastName;
 
     @Past(message = "Birth date must be in the past")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate birthDate;
 
     @Column(nullable = false, unique = true)
