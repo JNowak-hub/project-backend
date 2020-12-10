@@ -1,9 +1,13 @@
 package pl.sdacademy.projectbackend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,9 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pl.sdacademy.projectbackend.NullableConverter;
 import pl.sdacademy.projectbackend.configuration.CustomExceptionHandler;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
@@ -86,7 +90,7 @@ public class UserControllerTest {
         //given
         when(userService.addUser(any(User.class))).thenReturn(testUser);
         //language=JSON
-        String testUserJson ="{\n" +
+        String testUserJson = "{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
                 "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
                 "  \"email\": \"" + TEST_USER_EMAIL + "\",\n" +
@@ -106,24 +110,28 @@ public class UserControllerTest {
 
     }
 
-    @Test
-    @DisplayName("When call addUser should return status 404")
-    public void test4() throws Exception {
-        //given
-        when(userService.addUser(any(User.class))).thenThrow(UserNotFound.class);
-        // when
-        String testUserJson = "{\n" +
-                "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
-                "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
-                "  \"email\": \"" + TEST_USER_EMAIL + "\",\n" +
-                "  \"provider\": \"" + "local" + "\"\n" +
-                "}";
+    @ParameterizedTest
+    @CsvSource(value = {
+            "test:test:null",
+            "null:test:test@test.pl",
+            "test:null:test@test.pl",
+            "test:test:test",
+            "t:test:test@test.pl",
+            "test:t:test@test.pl"},
+            delimiter = ':')
+    @DisplayName("When call addUser bad request fields field should return status bad request")
+    public void test4(@ConvertWith(NullableConverter.class) String password, String login, String email) throws Exception {
+        //given when
+        ObjectMapper objectMapper = new ObjectMapper();
+        testUser.setEmail(email);
+        testUser.setPassword(password);
+        testUser.setLogin(login);
         ResultActions resultActions = mockMvc.perform(post("/api/user/add")
-                .content(testUserJson)
+                .content(objectMapper.writeValueAsString(testUser))
                 .contentType(MediaType.APPLICATION_JSON));
         //then
         resultActions
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -157,7 +165,7 @@ public class UserControllerTest {
     public void test7() throws Exception {
         //given
         List<User> testUsers = Arrays.asList(testUser);
-        when(userService.findUserByFirstNameAndLastName("firstName","lastName")).thenReturn(testUsers);
+        when(userService.findUserByFirstNameAndLastName("firstName", "lastName")).thenReturn(testUsers);
         //when then
         ResultActions result = mockMvc
                 .perform(get("/api/user/firstName/lastName"));
@@ -172,7 +180,7 @@ public class UserControllerTest {
     public void test8() throws Exception {
         //given
         List<User> testUsers = Arrays.asList(testUser);
-        when(userService.findUserByFirstNameAndLastName(anyString(),anyString())).thenThrow(UserNotFound.class);
+        when(userService.findUserByFirstNameAndLastName(anyString(), anyString())).thenThrow(UserNotFound.class);
         //when then
         mockMvc
                 .perform(get("/api/user/firstName/lastName"))

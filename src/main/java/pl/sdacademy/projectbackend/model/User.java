@@ -37,14 +37,17 @@ public class User implements UserDetails {
 
     @Column(nullable = false, unique = true)
     @Length(min = 3, message = "login can not be shorter than 3 characters")
+    @NotNull(message = "Login can not be null")
     private String login;
 
     @NotBlank(message = "Password can not be blank", groups = StandardUserValidation.class)
+    @NotNull(message = "Password can not be null" , groups = StandardUserValidation.class)
     private String password;
 
     @Column(nullable = false)
     @Email(message = "Email must be valid")
     @NotEmpty
+    @NotNull(message = "Email can not be null")
     private String email;
 
     @Enumerated(EnumType.STRING)

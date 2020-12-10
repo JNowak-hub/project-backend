@@ -1,6 +1,5 @@
 package pl.sdacademy.projectbackend.configuration;
 
-import org.hibernate.mapping.Set;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
