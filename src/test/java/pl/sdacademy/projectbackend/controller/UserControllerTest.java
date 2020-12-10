@@ -167,10 +167,7 @@ public class UserControllerTest {
         List<User> testUsers = Arrays.asList(testUser);
         when(userService.findUserByFirstNameAndLastName("firstName", "lastName")).thenReturn(testUsers);
         //when then
-        ResultActions result = mockMvc
-                .perform(get("/api/user/firstName/lastName"));
-
-        result
+        mockMvc.perform(get("/api/user/firstName/lastName"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].login", is(testUser.getLogin())));
     }
