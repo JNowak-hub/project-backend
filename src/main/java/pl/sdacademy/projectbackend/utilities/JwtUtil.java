@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.sdacademy.projectbackend.exceptions.BadRequestException;
+import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.oauth.facebook.model.UserPrincipal;
 
 import java.util.Date;
@@ -35,13 +36,14 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
     
-    public String generateToken(UserDetails user) {
+    public String generateToken(User user) {
         return createToken(user);
     }
 
-    private String createToken(UserDetails user) {
+    private String createToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .claim("email", user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -87,7 +89,7 @@ public class JwtUtil {
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(String.valueOf(userPrincipal.getId()))
                 .claim("email", userPrincipal.getUsername())
                 .claim("role", extractRole(userPrincipal))
                 .setIssuedAt(new Date())

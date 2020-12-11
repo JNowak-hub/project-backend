@@ -3,6 +3,7 @@ package pl.sdacademy.projectbackend.service;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.model.authentication.AuthenticationRequest;
 import pl.sdacademy.projectbackend.model.authentication.AuthenticationResponse;
 import pl.sdacademy.projectbackend.utilities.JwtUtil;
@@ -25,7 +26,7 @@ public class LoginService {
 
         return new AuthenticationResponse(
                 jwtUtil.generateToken(
-                        userService.loadUserByUsername(
+                        (User) userService.loadUserByUsername(
                         request.getUsername())
                 )
         );
