@@ -28,8 +28,13 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    public String extractLogin(String token){
-        return extractClaim(token, Claims::getSubject);
+    public String extractEmail(String token){
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email")
+                .toString();
     }
 
     public Date extractExpiration(String token) {
@@ -50,9 +55,9 @@ public class JwtUtil {
                 .compact();
     }
     
-    public Boolean validateToken(String token, UserDetails user) {
-        final String login = extractLogin(token);
-        return (login.equals(user.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token, User user) {
+        final String email = extractEmail(token);
+        return (email.equals(user.getEmail()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {

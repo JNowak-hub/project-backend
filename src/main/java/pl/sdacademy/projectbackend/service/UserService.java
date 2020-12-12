@@ -10,6 +10,7 @@ import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
+import pl.sdacademy.projectbackend.utilities.JwtUtil;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,10 +22,12 @@ public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder encoder;
+    private JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public User updateUser(User user) {
@@ -65,6 +68,12 @@ public class UserService implements UserDetailsService {
         }
         return userByEmail.get();
     }
+
+//    public User findUserByToken(String token) {
+//        if(token == null || token.isEmpty()){
+//
+//        }
+//    }
 
     public List<User> findUserByFirstNameAndLastName(String firstName, String lastName) {
         List<User> userByFirstNameAndLastName = userRepository.findUserByFirstNameAndLastName(firstName, lastName);

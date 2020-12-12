@@ -66,9 +66,9 @@ public class JwtUtilTest {
         //given
         String token = jwtUtil.generateToken(user);
         //when
-        String login = jwtUtil.extractLogin(token);
+        String login = jwtUtil.extractEmail(token);
         //then
-        assertThat(login).isEqualTo(user.getLogin());
+        assertThat(login).isEqualTo(user.getEmail());
     }
 
     @Test

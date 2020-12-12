@@ -2,10 +2,10 @@ package pl.sdacademy.projectbackend.filter;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.service.UserService;
 import pl.sdacademy.projectbackend.utilities.JwtUtil;
 
@@ -35,11 +35,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            login = jwtUtil.extractLogin(token);
+            login = jwtUtil.extractEmail(token);
         }
 
         if (login != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(login);
+            User userDetails = (User) this.userService.loadUserByUsername(login);
             if (jwtUtil.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
