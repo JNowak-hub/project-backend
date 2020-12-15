@@ -5,12 +5,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.sdacademy.projectbackend.exceptions.BadRequestException;
 import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.Role;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
 import pl.sdacademy.projectbackend.utilities.JwtUtil;
+import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,11 +25,13 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder encoder;
     private JwtUtil jwtUtil;
+    private SecurityContextUtils securityContextUtils;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, JwtUtil jwtUtil, SecurityContextUtils securityContextUtils) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.jwtUtil = jwtUtil;
+        this.securityContextUtils = securityContextUtils;
     }
 
     public User updateUser(User user) {
@@ -69,11 +73,15 @@ public class UserService implements UserDetailsService {
         return userByEmail.get();
     }
 
-//    public User findUserByToken(String token) {
-//        if(token == null || token.isEmpty()){
-//
-//        }
-//    }
+    public User findUserByToken(String token) {
+        if(token == null || token.isBlank()){
+            throw new BadRequestException("Token can not be empty or null");
+        }
+        if(!jwtUtil.validateToken(token, securityContextUtils.getCurrentUser())){
+            throw new BadRequestException("Invalid token!");
+        }
+        return findUserByEmail(jwtUtil.extractEmail(token));
+    }
 
     public List<User> findUserByFirstNameAndLastName(String firstName, String lastName) {
         List<User> userByFirstNameAndLastName = userRepository.findUserByFirstNameAndLastName(firstName, lastName);

@@ -4,14 +4,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.sdacademy.projectbackend.NullableConverter;
+import pl.sdacademy.projectbackend.exceptions.BadRequestException;
 import pl.sdacademy.projectbackend.exceptions.UserAlreadyExists;
 import pl.sdacademy.projectbackend.exceptions.UserNotFound;
 import pl.sdacademy.projectbackend.model.User;
 import pl.sdacademy.projectbackend.repository.UserRepository;
+import pl.sdacademy.projectbackend.utilities.JwtUtil;
+import pl.sdacademy.projectbackend.utilities.SecurityContextUtils;
 
 import java.util.*;
 
@@ -28,6 +36,12 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private SecurityContextUtils contextUtils;
 
     @InjectMocks
     private UserService userService;
@@ -167,8 +181,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("When findUserByFirstNameAndLastName is called then returns User")
     void test12() {
-        List<User> testUsers = Arrays.asList(testUser);
         //given
+        List<User> testUsers = Arrays.asList(testUser);
         when(userRepository.findUserByFirstNameAndLastName("firstName","lastName")).thenReturn(testUsers);
         //when
         List<User> userByFirstNameAndLastName = userService.findUserByFirstNameAndLastName("firstName", "lastName");
@@ -179,8 +193,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("When findUserByFirstNameAndLastName is called then returns empty list")
     void test13() {
-        List<User> testUsers = Collections.emptyList();
         //given
+        List<User> testUsers = Collections.emptyList();
         when(userRepository.findUserByFirstNameAndLastName(anyString(),anyString())).thenReturn(testUsers);
         //when
         List<User> userByFirstNameAndLastName = userService.findUserByFirstNameAndLastName("firstName", "lastName");
@@ -188,4 +202,62 @@ public class UserServiceTest {
         assertThat(userByFirstNameAndLastName).isNotSameAs(testUsers);
     }
 
+    @Test
+    @DisplayName("When find user by token then return found user")
+    void test14() {
+        //given
+        String token = "token.token.token";
+        when(jwtUtil.extractEmail(token)).thenReturn(testUser.getEmail());
+        when(userRepository.findUserByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
+        when(contextUtils.getCurrentUser()).thenReturn(testUser);
+        when(jwtUtil.validateToken(token,testUser)).thenReturn(true);
+        //when
+        User user = userService.findUserByToken(token);
+        //then
+        assertThat(testUser).isEqualTo(user);
+    }
+
+    @ParameterizedTest()
+    @ValueSource(strings = {
+            "",
+            " ",
+            "   ",
+            "null"
+    })
+    @DisplayName("When find user by empty or null token then throw BadRequestException exception")
+    void test15(@ConvertWith(NullableConverter.class) String tokenValue) {
+        //given
+        String token = tokenValue;
+        //when
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.findUserByToken(token));
+        //then
+        assertThat("Token can not be empty or null").isEqualTo(exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("When find user by token when no user in context holder then throw UserNotFound exception")
+    void test17() {
+        //given
+        String token = "token.token.token";
+        when(contextUtils.getCurrentUser()).thenThrow(UserNotFound.class);
+        //when
+        UserNotFound exception = assertThrows(UserNotFound.class, () -> userService.findUserByToken(token));
+        //then
+        verify(jwtUtil, never()).extractEmail(token);
+        verify(userRepository, never()).findUserByEmail(any());
+    }
+
+    @Test
+    @DisplayName("When find user by invalid token then throw BadRequestException exception")
+    void test18() {
+        //given
+        String token = "token.token.token";
+        when(contextUtils.getCurrentUser()).thenReturn(testUser);
+        when(jwtUtil.validateToken(token,testUser)).thenReturn(false);
+        //when
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.findUserByToken(token));
+        //then
+        assertThat("Invalid token!").isEqualTo(exception.getMessage());
+    }
 }

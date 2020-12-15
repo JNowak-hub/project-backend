@@ -48,4 +48,9 @@ public class UserController {
     public ResponseEntity<List<User>> getUserByFullName(@PathVariable String firstname, @PathVariable String lastname){
         return ResponseEntity.ok(userService.findUserByFirstNameAndLastName(firstname, lastname));
     }
+
+    @GetMapping("/{token}")
+    public ResponseEntity<User> getUserByToken(@PathVariable String token){
+        return ResponseEntity.ok(userService.findUserByToken(token));
+    }
 }
