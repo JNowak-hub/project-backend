@@ -1,14 +1,17 @@
 package pl.sdacademy.projectbackend.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.projectbackend.model.User;
+import pl.sdacademy.projectbackend.repository.UserRepository;
 import pl.sdacademy.projectbackend.service.UserService;
+import pl.sdacademy.projectbackend.validaiton.customvalidators.emailavailable.EmailAvailableValidator;
 import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
+import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.List;
 
@@ -18,12 +21,14 @@ public class UserController {
 
     private UserService userService;
 
+
     public UserController(UserService userService) {
         this.userService = userService;
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
@@ -45,12 +50,9 @@ public class UserController {
     }
 
     @GetMapping("/{firstname}/{lastname}")
-    public ResponseEntity<List<User>> getUserByFullName(@PathVariable String firstname, @PathVariable String lastname){
+    public ResponseEntity<List<User>> getUserByFullName(@PathVariable String firstname, @PathVariable String lastname) {
         return ResponseEntity.ok(userService.findUserByFirstNameAndLastName(firstname, lastname));
     }
 
-    @GetMapping("/{token}")
-    public ResponseEntity<User> getUserByToken(@PathVariable String token){
-        return ResponseEntity.ok(userService.findUserByToken(token));
-    }
+
 }

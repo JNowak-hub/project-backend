@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 import pl.sdacademy.projectbackend.oauth.facebook.model.AuthProvider;
+import pl.sdacademy.projectbackend.validaiton.customvalidators.emailavailable.EmailAvailable;
 import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
 import javax.persistence.*;
@@ -48,6 +49,7 @@ public class User implements UserDetails {
     @Email(message = "Email must be valid")
     @NotEmpty
     @NotNull(message = "Email can not be null")
+    @EmailAvailable
     private String email;
 
     @Enumerated(EnumType.STRING)

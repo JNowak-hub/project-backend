@@ -89,7 +89,6 @@ public class UserControllerTest {
     public void test3() throws Exception {
         //given
         when(userService.addUser(any(User.class))).thenReturn(testUser);
-        //language=JSON
         String testUserJson = "{\n" +
                 "  \"password\": \"" + TEST_USER_PASSWORD + "\",\n" +
                 "  \"login\": \"" + TEST_USER_LOGIN + "1" + "\",\n" +
