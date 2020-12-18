@@ -8,7 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sdacademy.projectbackend.model.userparty.UserEvent;
 import pl.sdacademy.projectbackend.oauth.facebook.model.AuthProvider;
-import pl.sdacademy.projectbackend.validaiton.customvalidators.emailavailable.EmailAvailable;
+import pl.sdacademy.projectbackend.validaiton.EmailValid;
+import pl.sdacademy.projectbackend.validaiton.LoginValid;
 import pl.sdacademy.projectbackend.validaiton.groups.StandardUserValidation;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Length(min = 3, max = 13, message = "Name must be between 3-13 characters")
@@ -33,23 +34,19 @@ public class User implements UserDetails {
     private String lastName;
 
     @Past(message = "Birth date must be in the past")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     @Column(nullable = false, unique = true)
-    @Length(min = 3, message = "login can not be shorter than 3 characters")
-    @NotNull(message = "Login can not be null")
+    @LoginValid
     private String login;
 
     @NotBlank(message = "Password can not be blank", groups = StandardUserValidation.class)
-    @NotNull(message = "Password can not be null" , groups = StandardUserValidation.class)
+    @NotNull(message = "Password can not be null", groups = StandardUserValidation.class)
     private String password;
 
     @Column(nullable = false)
-    @Email(message = "Email must be valid")
-    @NotEmpty
-    @NotNull(message = "Email can not be null")
-    @EmailAvailable
+    @EmailValid
     private String email;
 
     @Enumerated(EnumType.STRING)
