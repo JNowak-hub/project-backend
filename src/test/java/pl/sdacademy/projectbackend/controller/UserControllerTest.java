@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,8 +38,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 @WebAppConfiguration
 public class UserControllerTest {
 
@@ -190,6 +190,39 @@ public class UserControllerTest {
         mockMvc
                 .perform(get("/api/user/firstName/lastName"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("When get user by token then return correct user")
+    public void test9() throws Exception {
+        //given
+        String token = "abc.abc.abc";
+        when(userService.findUserByToken(token)).thenReturn(testUser);
+        //when/then
+        mockMvc.perform(get("/api/user")
+                .param("token", token))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", is(testUser.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login", is(testUser.getLogin())));
+    }
+
+    @ParameterizedTest()
+    @ValueSource(strings = {
+            "",
+            " ",
+            "   "
+    })
+    @DisplayName("When find user by empty or null token then throw BadRequestException exception")
+    void test10(@ConvertWith(NullableConverter.class) String tokenValue) throws Exception {
+        //given
+        String token = tokenValue;
+        when(userService.findUserByToken(token)).thenCallRealMethod();
+        //when/then
+        mockMvc.perform(get("/api/user")
+                .param("token", token))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("Token can not be empty or null"));
+
     }
 
 

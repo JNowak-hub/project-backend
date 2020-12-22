@@ -43,7 +43,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
 
-    // trailing slash to enable dot as parameter char
     @GetMapping(path = "/by-email/{email}/")
     public ResponseEntity<User> getUserByMail(@PathVariable String email) {
         return ResponseEntity.ok(userService.findUserByEmail(email));
@@ -52,6 +51,11 @@ public class UserController {
     @GetMapping("/{firstname}/{lastname}")
     public ResponseEntity<List<User>> getUserByFullName(@PathVariable String firstname, @PathVariable String lastname) {
         return ResponseEntity.ok(userService.findUserByFirstNameAndLastName(firstname, lastname));
+    }
+
+    @GetMapping
+    public ResponseEntity<User> getUserByToken(@RequestParam String token){
+        return ResponseEntity.ok(userService.findUserByToken(token));
     }
 
 
